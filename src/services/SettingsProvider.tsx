@@ -8,6 +8,8 @@ import {
   type ReactNode,
 } from 'react';
 
+import { SCREENSHOT_MODE } from '@/config/screenshotMode';
+
 import { defaultSettings, loadSettings, saveSettings, type Settings } from './settings';
 
 interface SettingsContextValue {
@@ -26,7 +28,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     loadSettings().then((loaded) => {
-      setSettings(loaded);
+      setSettings(SCREENSHOT_MODE ? { ...loaded, introSeen: true } : loaded);
       setReady(true);
     });
   }, []);

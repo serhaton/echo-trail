@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { SCREENSHOT_MODE } from '@/config/screenshotMode';
 import { useStoreValue } from '@/game/valueStore';
 import {
   detectHeadphones,
@@ -48,6 +49,12 @@ export function useAudioOutput(): AudioOutputInfo {
       unwatch();
     };
   }, []);
+
+  // Screenshot builds: the simulator has no headphones, but the store
+  // pictures should show the headphone experience.
+  if (SCREENSHOT_MODE) {
+    return { detected: 'connected', usingHeadphones: true, visualCues: false, needsAnswer: false };
+  }
 
   const usingHeadphones =
     audioOutput === 'headphones' ||

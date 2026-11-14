@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { SCREENSHOT_MODE } from '@/config/screenshotMode';
+
 import { ads } from './ads';
 import { purchases } from './purchases';
 
@@ -11,6 +13,7 @@ import { purchases } from './purchases';
  */
 export function ServicesInit() {
   useEffect(() => {
+    if (SCREENSHOT_MODE) return;
     const timer = setTimeout(() => {
       void purchases.init().then(() => ads.init());
     }, 1200);

@@ -1,11 +1,12 @@
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Settings, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { audioEngine, preloadSounds } from '@/audio';
 import { AmbientGlow } from '@/components/AmbientGlow';
 import { MenuButton } from '@/components/MenuButton';
 import { Screen } from '@/components/Screen';
+import { SCREENSHOT_MODE } from '@/config/screenshotMode';
 import { useTranslation } from '@/i18n';
 import { useSettings } from '@/services/SettingsProvider';
 import { colors, spacing, typography } from '@/theme';
@@ -24,6 +25,14 @@ export default function MainMenu() {
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const glowSize = Math.min(width * 0.8, 340);
+
+  // Screenshot builds only: open the screen named by the launch argument
+  // `-ScreenshotRoute /journey/zen` (see scripts/take-screenshots.sh).
+  useEffect(() => {
+    if (!SCREENSHOT_MODE) return;
+    const route = Settings.get('ScreenshotRoute') as string | undefined;
+    if (route) router.push(route as never);
+  }, []);
 
   // First launch: show "how to play" once.
   const { settings } = useSettings();

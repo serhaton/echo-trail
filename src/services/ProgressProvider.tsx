@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 
+import { demoProgress, SCREENSHOT_MODE } from '@/config/screenshotMode';
 import { allLevels } from '@/data/levels';
 import type { StarCount } from '@/game/countdown';
 
@@ -38,7 +39,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     loadProgress().then((p) => {
-      setProgress(p);
+      setProgress(SCREENSHOT_MODE ? demoProgress() : p);
       setReady(true);
     });
   }, []);

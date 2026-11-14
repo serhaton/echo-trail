@@ -75,6 +75,7 @@ import { useAudioOutput } from '@/hooks/useAudioOutput';
 import { ValueStore } from '@/game/valueStore';
 import { useTranslation, type TranslationKey } from '@/i18n';
 import type { StoryId } from '@/i18n/types';
+import { SCREENSHOT_MODE } from '@/config/screenshotMode';
 import { JOURNEY_LENGTH, lockReason, nextLevel } from '@/data/journeys';
 import { goBack } from '@/navigation/goBack';
 import { getMode, isModeId, type ModeId } from '@/modes';
@@ -148,7 +149,13 @@ type Phase =
  * `difficulty` defaults to normal until the selection screens exist.
  */
 export default function LevelScreen() {
-  const params = useLocalSearchParams<{ id: string; mode?: string; difficulty?: string }>();
+  const params = useLocalSearchParams<{
+    id: string;
+    mode?: string;
+    difficulty?: string;
+    demo?: string;
+    cues?: string;
+  }>();
   const level = getLevel(params.id ?? '');
   const { t } = useTranslation();
 
@@ -172,6 +179,9 @@ export default function LevelScreen() {
       level={level}
       mode={mode}
       difficulty={difficulty}
+      // Screenshot builds only: the level plays itself (see screenshotMode.ts).
+      demo={SCREENSHOT_MODE ? params.demo : undefined}
+      demoCues={SCREENSHOT_MODE && params.cues === '1'}
     />
   );
 }
@@ -180,6 +190,10 @@ interface LevelPlayerProps {
   level: LevelDefinition;
   mode: ModeId;
   difficulty: Difficulty;
+  /** Screenshot mode: 'walk' = walk the route by itself; 'hint' = also use a hint. */
+  demo?: string;
+  /** Screenshot mode: force the no-headphones wave rings on. */
+  demoCues?: boolean;
 }
 
 /**
@@ -187,14 +201,14 @@ interface LevelPlayerProps {
  * target found by ear, the countdown (sound + corner line), the colour
  * trail and the end-of-level reveal with stars.
  */
-function LevelPlayer({ level, mode, difficulty }: LevelPlayerProps) {
+function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelPlayerProps) {
   const { t, language } = useTranslation();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   const { settings, updateSettings } = useSettings();
   const scheme = settings.controlScheme;
   // Read once per level: turning the demo off mid-card must not restart loading.
-  const showControlIntro = useRef(settings.showControlIntro);
+  const showControlIntro = useRef(settings.showControlIntro && !demo);
   const collectibles = useMemo(() => level.collectibles ?? [], [level]);
   useKeepScreenAwake();
 
@@ -205,7 +219,7 @@ function LevelPlayer({ level, mode, difficulty }: LevelPlayerProps) {
     tilt.start();
     return () => tilt.stop();
   }, [scheme, tilt]);
-  const { visualCues } = useAudioOutput();
+  const visualCues = useAudioOutput().visualCues || demoCues;
   const { progress, recordCompletion } = useProgress();
 
   const modeDef = getMode(mode);
@@ -526,14 +540,16 @@ function LevelPlayer({ level, mode, difficulty }: LevelPlayerProps) {
     (dt: number) => {
       // 1) Movement + collision
       const tuning = defaultMovementTuning;
-      const desired = desiredVelocity(
-        scheme,
-        touch.current,
-        pos.current,
-        camera,
-        tuning,
-        tilt.lean,
-      );
+      let desired = desiredVelocity(scheme, touch.current, pos.current, camera, tuning, tilt.lean);
+      if (demo) {
+        // Screenshot mode: walk the route to the target at an easy pace.
+        const wp = nav.waypoint(routeToTarget, pos.current, 40) ?? level.target.position;
+        const gap = distance(wp, pos.current) || 1;
+        desired = {
+          x: ((wp.x - pos.current.x) / gap) * tuning.maxSpeed * 0.8,
+          y: ((wp.y - pos.current.y) / gap) * tuning.maxSpeed * 0.8,
+        };
+      }
       let v = smoothVelocity(vel.current, desired, dt, tuning);
 
       const result = moveWithCollisions(
@@ -713,6 +729,8 @@ function LevelPlayer({ level, mode, difficulty }: LevelPlayerProps) {
       timeSound,
       trail,
       tilt,
+      demo,
+      routeToTarget,
       secondsLeft,
       collectibles,
       collect,
@@ -746,6 +764,16 @@ function LevelPlayer({ level, mode, difficulty }: LevelPlayerProps) {
 
   useGameLoop(tick, phase === 'playing');
 
+
+  // Screenshot mode: use a hint a few seconds into the walk.
+  useEffect(() => {
+    if (demo !== 'hint' || phase !== 'playing') return;
+    const id = setTimeout(() => {
+      if (hints.current.activate()) showHint();
+      hintStore.set(hints.current.snapshot);
+    }, 3500);
+    return () => clearTimeout(id);
+  }, [demo, phase, showHint, hintStore]);
 
   // Show the result once the picture has fully opened.
   useEffect(() => {

@@ -77,6 +77,23 @@ npm run check-levels    # her bölüm her zorlukta çözülebilir mi?
 elle tasarlamak istersen üretecin aralığından çıkar (`scripts/generate-levels.ts`
 içindeki `FIRST`).
 
+## Mağaza ve web sitesi
+
+- `store/README.md`: App Store Connect'e girilecek tüm bilgiler (ad, açıklama,
+  anahtar kelimeler, yaş derecelendirmesi, gizlilik yanıtları, kontrol listesi).
+- `store/screenshots/`: mağaza ekran görüntüleri (iPhone 6.9", 6.1", iPad 13";
+  İngilizce ve Türkçe). `store/creative/`: Header ve Search Results görselleri.
+- `docs/`: GitHub Pages sitesi (tanıtım, gizlilik, destek):
+  https://serhaton.github.io/echo-trail/
+
+```bash
+python3 scripts/generate-brand-assets.py   # ikon, açılış ekranı, mağaza görselleri
+python3 scripts/build-site.py              # docs/ altındaki sayfalar
+scripts/take-screenshots.sh                # ham ekran görüntüleri (başındaki nota bak)
+python3 scripts/compose-screenshots.py     # başlıklı son haller, tüm boyutlar
+python3 scripts/check-store-text.py        # mağaza metinleri sınırlara sığıyor mu?
+```
+
 ## Klasör yapısı
 
 ```
