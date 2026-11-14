@@ -18,8 +18,7 @@ from pathlib import Path
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 SITE = "https://serhaton.github.io/echo-trail"
-REPO = "https://github.com/serhaton/echo-trail"
-ISSUES = f"{REPO}/issues"
+EMAIL = "serhaton@gmail.com"
 DEVELOPER = "Serhat Onal"
 EFFECTIVE = {"en": "14 November 2026", "tr": "14 Kasım 2026"}
 
@@ -94,7 +93,7 @@ CONTENT = {
                     "If the app starts handling information differently, this page will be updated and the effective date above will change.",
                 ]),
                 ("Contact", [
-                    f"Questions about privacy? Open an issue at {ISSUES}.",
+                    f"Questions about privacy? Write to {EMAIL}.",
                 ]),
             ],
         },
@@ -114,7 +113,7 @@ CONTENT = {
                 ("Which devices are supported?", "iPhone and iPad, in portrait orientation."),
             ],
             "contact_title": "Contact",
-            "contact": f"Found a bug or have a question? Open an issue at {ISSUES} and describe what happened, your device and iOS version.",
+            "contact": f"Found a bug or have a question? Write to {EMAIL} and describe what happened, your device and iOS version.",
         },
     },
     "tr": {
@@ -187,7 +186,7 @@ CONTENT = {
                     "Uygulama bilgileri farklı biçimde işlemeye başlarsa bu sayfa güncellenir ve yukarıdaki yürürlük tarihi değişir.",
                 ]),
                 ("İletişim", [
-                    f"Gizlilikle ilgili soruların için {ISSUES} adresinde bir kayıt açabilirsin.",
+                    f"Gizlilikle ilgili soruların için {EMAIL} adresine yazabilirsin.",
                 ]),
             ],
         },
@@ -207,17 +206,20 @@ CONTENT = {
                 ("Hangi cihazlar destekleniyor?", "iPhone ve iPad, dikey ekranda."),
             ],
             "contact_title": "İletişim",
-            "contact": f"Bir hata mı buldun ya da sorun mu var? {ISSUES} adresinde bir kayıt aç; ne olduğunu, cihazını ve iOS sürümünü yaz.",
+            "contact": f"Bir hata mı buldun ya da sorun mu var? {EMAIL} adresine yaz; ne olduğunu, cihazını ve iOS sürümünü belirt.",
         },
     },
 }
 
 
 def linkify(text):
-    """Escape text and turn bare https:// URLs into links."""
+    """Escape text and turn bare https:// URLs and the contact email into links."""
     out = []
     for word in text.split(" "):
         core = word.rstrip(").,;")
+        if core == EMAIL:
+            out.append(f'<a href="mailto:{EMAIL}">{EMAIL}</a>{escape(word[len(core):])}')
+            continue
         if core.startswith("(https://") or core.startswith("https://"):
             url = core.lstrip("(")
             tail = word[len(core):]

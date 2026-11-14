@@ -180,9 +180,8 @@ The website lives in `docs/` and is served by GitHub Pages.
 | Support URL | https://serhaton.github.io/echo-trail/support.html | https://serhaton.github.io/echo-trail/tr/support.html |
 | Privacy Policy URL | https://serhaton.github.io/echo-trail/privacy.html | https://serhaton.github.io/echo-trail/tr/privacy.html |
 
-The pages give GitHub Issues as the way to get in touch. Apple expects the
-support page to offer a way to reach you; if you would rather publish an email
-address, add it to `CONTENT` in `scripts/build-site.py` and rebuild **(decide)**.
+The pages give `serhaton@gmail.com` as the contact address (set as `EMAIL` in
+`scripts/build-site.py`).
 
 ## 4. Screenshots and artwork
 
@@ -366,4 +365,3 @@ without them, but they should be settled before a public release.
       especially), ads, the purchase with a sandbox account, restore.
 - [ ] **Privacy answers** checked against Google's current disclosure
       (section 7).
-- [ ] **Support contact** decided (section 3).
