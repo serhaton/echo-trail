@@ -3,7 +3,7 @@
     "name": "Echo Trail",
     "slug": "echo-trail",
     "scheme": "echotrail",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -46,6 +46,12 @@
         }
       ],
       [
+        "expo-sensors",
+        {
+          "motionPermission": "Motion is used only for the optional tilt control: you tilt the device to walk."
+        }
+      ],
+      [
         "expo-tracking-transparency",
         {
           "userTrackingPermission": "Your data is used to show you more relevant ads. You can keep playing either way."
@@ -60,7 +66,7 @@
       [
         "react-native-google-mobile-ads",
         {
-          "iosAppId": "ca-app-pub-3940256099942544~1458511713",
+          "iosAppId": "ca-app-pub-4475107857161348~1377597514",
           "skAdNetworkItems": [
             "cstr6suwn9.skadnetwork"
           ],

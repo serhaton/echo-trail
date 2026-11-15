@@ -15,12 +15,16 @@ export const ADS_PROVIDER: 'admob' | 'mock' = 'admob';
 
 /** Real AdMob ad unit ids (release builds only). Empty = use test units. */
 export const AD_UNIT_IDS = {
-  interstitial: '',
-  rewarded: '',
+  interstitial: 'ca-app-pub-4475107857161348/5197423028',
+  rewarded: 'ca-app-pub-4475107857161348/7161066372',
 };
 
-/** Show an interstitial after every Nth completed level (between levels only). */
-export const INTERSTITIAL_EVERY = 1;
+/**
+ * Interstitials (between levels only): after each ad, the next one comes
+ * after a random number of completed levels in this range, so with 1–2 an
+ * ad follows either the very next level or the one after it.
+ */
+export const INTERSTITIAL_GAP = { min: 1, max: 2 };
 
 /** App Store Connect product id of the one-time "remove ads" purchase. */
 export const REMOVE_ADS_PRODUCT_ID = 'com.serhatonal.echotrail.removeads';

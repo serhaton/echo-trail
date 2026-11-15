@@ -18,7 +18,7 @@ export interface LevelProgress {
 export interface ProgressData {
   version: 1;
   levels: Record<string, LevelProgress>;
-  /** Total level completions; drives the interstitial cadence (stage 12). */
+  /** Total level completions (a statistic; the ad cadence is counted in services/ads.ts). */
   completions: number;
 }
 

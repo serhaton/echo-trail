@@ -1,4 +1,5 @@
 {
   "CFBundleDisplayName": "Echo Trail",
-  "NSUserTrackingUsageDescription": "Verilerin sana daha ilgili reklamlar göstermek için kullanılır. İzin versen de vermesen de oynamaya devam edebilirsin."
+  "NSUserTrackingUsageDescription": "Verilerin sana daha ilgili reklamlar göstermek için kullanılır. İzin versen de vermesen de oynamaya devam edebilirsin.",
+  "NSMotionUsageDescription": "Hareket verisi yalnızca isteğe bağlı eğerek kontrol için kullanılır: yürümek için cihazı eğersin."
 }

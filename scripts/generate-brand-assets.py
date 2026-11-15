@@ -7,6 +7,8 @@ Generates Echo Trail's brand artwork with Pillow:
   store/creative/header-3840x1646.png  App Store product page header (21:9)
   store/creative/search-3840x2560.png  App Store search results (3:2)
   store/creative/universal-5244x2950.png  universal asset (16:9, PNG)
+  store/creative/tr/…                   the same three with Turkish text
+  store/iap/remove-ads-1024.png         image of the "Remove Ads" purchase
   docs/assets/hero.jpg, og.jpg, icon.png  for the website
 
 The mark: a warm point of light in the dark (the player), a coloured
@@ -339,12 +341,49 @@ def creative(name, w, h, safe, layout, subtitle="SOUND MAZE", tagline="Find your
     return out
 
 
+def iap_remove_ads():
+    """
+    Image for the "Remove Ads" in-app purchase (1024 x 1024, no transparency):
+    the game's light and trail, with a crossed-out "AD" badge.
+    """
+    size = 2048  # drawn at 2x, then reduced for clean edges
+    img = background(size, size, (size * 0.5, size * 0.5), size * 0.9)
+    mark(img, (size * 0.40, size * 0.47), 1.75)
+    # The badge: an "AD" tile inside a no-entry ring.
+    cx, cy, r = size * 0.70, size * 0.72, size * 0.17
+    glow(img, (cx, cy), r * 1.9, BG, 0.95)  # a pool of dark so the badge reads over the trail
+    badge = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(badge)
+    tile = [cx - r * 0.56, cy - r * 0.38, cx + r * 0.56, cy + r * 0.38]
+    d.rounded_rectangle(tile, radius=r * 0.14, outline=(237, 239, 245, 255), width=int(r * 0.06))
+    font = ImageFont.truetype(LIGHT[0], int(r * 0.52), index=LIGHT[1])
+    tw = d.textlength("AD", font=font)
+    d.text((cx - tw / 2, cy - r * 0.31), "AD", font=font, fill=(237, 239, 245, 255))
+    ring = int(r * 0.11)
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=TRAIL[0] + (255,), width=ring)
+    k = r * math.cos(math.pi / 4)
+    d.line([(cx - k, cy - k), (cx + k, cy + k)], fill=TRAIL[0] + (255,), width=ring)
+    img.alpha_composite(badge.filter(ImageFilter.GaussianBlur(26)))  # soft glow under it
+    img.alpha_composite(badge.filter(ImageFilter.GaussianBlur(1.2)))
+    out = img.convert("RGB").resize((1024, 1024), Image.LANCZOS)
+    path = ROOT / "store" / "iap" / "remove-ads-1024.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    out.save(path)
+    print("wrote", path.relative_to(ROOT), out.size, out.mode)
+
+
 if __name__ == "__main__":
     ic = icon()
     splash()
+    iap_remove_ads()
     header = creative("header-3840x1646.png", 3840, 1646, (1097, 493, 1646, 661), "header")
     creative("search-3840x2560.png", 3840, 2560, (836, 765, 2168, 1030), "search")
     creative("universal-5244x2950.png", 5244, 2950, (1921, 660, 1402, 962), "universal")
+    # The same three images for the Turkish store page.
+    tr = dict(subtitle="SES LABİRENTİ", tagline="Yolunu sesle bul")
+    creative("tr/header-3840x1646.png", 3840, 1646, (1097, 493, 1646, 661), "header", **tr)
+    creative("tr/search-3840x2560.png", 3840, 2560, (836, 765, 2168, 1030), "search", **tr)
+    creative("tr/universal-5244x2950.png", 5244, 2950, (1921, 660, 1402, 962), "universal", **tr)
     docs = ROOT / "docs" / "assets"
     docs.mkdir(parents=True, exist_ok=True)
     ic.resize((512, 512), Image.LANCZOS).save(docs / "icon.png")

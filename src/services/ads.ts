@@ -1,5 +1,5 @@
 import { audioEngine } from '@/audio';
-import { ADS_PROVIDER, INTERSTITIAL_EVERY } from '@/config/monetization';
+import { ADS_PROVIDER, INTERSTITIAL_GAP } from '@/config/monetization';
 
 import { purchases } from './purchases';
 
@@ -8,8 +8,8 @@ import { purchases } from './purchases';
  *
  * Rules (from the design doc):
  *   - never show an ad during gameplay;
- *   - interstitials only between levels, every INTERSTITIAL_EVERY levels,
- *     and never for players who bought "remove ads";
+ *   - interstitials only between levels, after a random 1–2 completed
+ *     levels (INTERSTITIAL_GAP), and never for players who bought "remove ads";
  *   - rewarded videos are always the player's choice (extra time, extra hint)
  *     and stay available after "remove ads".
  *
@@ -95,17 +95,28 @@ export const ads = {
   },
 
   /**
-   * Call between levels with the total number of completed levels.
-   * Shows an interstitial on every INTERSTITIAL_EVERY-th one, unless the
-   * player owns "remove ads".
+   * Call once after each completed level, between levels. Shows an
+   * interstitial when the randomly drawn gap has passed, unless the player
+   * owns "remove ads".
    */
-  async maybeShowInterstitial(completions: number): Promise<void> {
+  async maybeShowInterstitial(): Promise<void> {
     if (purchases.hasRemoveAds()) return;
-    if (completions === 0 || completions % INTERSTITIAL_EVERY !== 0) return;
+    levelsUntilInterstitial -= 1;
+    if (levelsUntilInterstitial > 0) return;
+    levelsUntilInterstitial = drawInterstitialGap();
     await this.init();
     await withAudioPaused(() => provider.showInterstitial());
   },
 };
+
+/** Completed levels until the next interstitial: a whole number in INTERSTITIAL_GAP. */
+function drawInterstitialGap(): number {
+  const { min, max } = INTERSTITIAL_GAP;
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+/** Counts down per completed level; kept in memory, so it restarts with the app. */
+let levelsUntilInterstitial = drawInterstitialGap();
 
 /** Seconds granted by the "watch an ad" option when time runs out. */
 export const REWARDED_EXTRA_SECONDS = 15;

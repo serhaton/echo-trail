@@ -872,7 +872,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
   const goNext = async () => {
     if (!next) return;
     // Between levels only, never in play; the service decides whether one is due.
-    await ads.maybeShowInterstitial(progress.completions);
+    await ads.maybeShowInterstitial();
     router.replace({ pathname: '/level/[id]', params: { id: next.id, difficulty } });
   };
   const timerRight = width - insets.right - spacing.md;

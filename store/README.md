@@ -33,7 +33,7 @@ that every field below fits.
 | Price | Free **(decide)** |
 | Availability | All countries or regions **(decide)** |
 | Copyright | `© 2026 Serhat Onal` |
-| Version | 1.0.0 (app.json currently says 0.1.0, see section 9) |
+| Version | 1.0.0, build 1 (`version` and `ios.buildNumber` in `app.json`) |
 | Export compliance | Uses no non-exempt encryption (already declared in the app: `ITSAppUsesNonExemptEncryption = false`) |
 | Advertising identifier | Yes, the app uses the IDFA to serve ads (through AdMob, behind the tracking prompt) |
 
@@ -253,8 +253,10 @@ Each image shows the game's idea: everything is dark except where the light
 has walked, and along that trail the four journeys' pictures, the obstacles
 and the hidden sounds (notes) show through, with the sound being followed
 (the star and its rings) ahead. The title reads "ECHO TRAIL" with "SOUND
-MAZE" beneath it and the line "Find your way by sound", in English only;
-there is no Turkish version of these images. The title sits inside Apple's
+MAZE" beneath it and the line "Find your way by sound". The Turkish versions
+are in `store/creative/tr/` under the same file names, with "SES LABİRENTİ"
+and "Yolunu sesle bul"; upload them under the Turkish localization. The
+title sits inside Apple's
 art safe area for each format; everything outside it is auxiliary art that
 may be cropped. The pictures in them are the current placeholder level
 pictures, so regenerate once the final art is in.
@@ -286,10 +288,17 @@ Create one product in App Store Connect › Monetization › In-App Purchases.
 | Display name (30 max) | `Remove Ads` | `Reklamları Kaldır` |
 | Description (45 max) | `No ads between levels, plus an extra hint.` | `Bölüm arası reklam yok, ek ipucu var.` |
 
-**Review screenshot:** a screenshot of the Settings screen showing the "Remove
-ads" button (take it from a build on your device).
+**Image** (1024 × 1024, shown in offer code redemptions and, if App Store
+Promotion is enabled, on the product page): `store/iap/remove-ads-1024.png`,
+the game's light and trail with a crossed-out "AD" badge. Regenerate with
+`python3 scripts/generate-brand-assets.py`.
 
-**Review notes for the purchase:**
+**Review screenshot:** `store/iap/review-screenshot-2064x2752.png`, the
+Settings screen on an iPad 13" simulator with the "Remove ads" button, its
+description and "Restore purchases" under PURCHASES. It is only seen by App
+Review.
+
+**Review notes for the purchase** (paste into Review Information › Review Notes):
 
 ```
 "Remove Ads" is a one-time, non-consumable purchase. It removes the full-screen ads shown between levels and raises the free hints per level from 1 to 2. Optional rewarded videos stay available. It is offered in Settings > Purchases, where "Restore purchases" is also located.
@@ -359,21 +368,62 @@ requests non-personalised ads if the player declines.
 | Sign-in required | No |
 | Contact name, phone, email | **(decide)** yours; not shown publicly |
 
-**Notes for the reviewer:**
+**Notes for the reviewer** (4000 max; paste all of it, after filling in the
+tested devices). It answers, up front, every question App Review asked about
+the two earlier apps (see "Lessons from earlier reviews" below):
 
 ```
 Echo Trail: Sound Maze is an audio game: the screen is intentionally almost black during play. Please use headphones and turn the volume up.
 
-How to play: start a level from Play > a journey > level 1. A card shows the control scheme; press Start. Hold a finger on the screen and the glowing dot walks toward it. Follow the repeating sound: it is louder and faster as you get closer, and panned left or right. Where the dot has walked, the ground stays lit and shows the scene and the obstacles nearby. Reaching the sound ends the level and reveals the whole picture.
+1. SCREEN RECORDING
+A recording made on a physical iPhone is attached. It starts with launching the app and shows: the tracking permission prompt, the intro, a full level (walk, hint, reaching the sound, picture reveal), an ad between levels, a rewarded ad, and the "Remove ads" purchase and "Restore purchases" in Settings.
 
-If you get stuck, press Hint (bottom right): a light shows the way and the invisible obstacles appear briefly. Without headphones, the game shows wave rings coming from the direction of the sound.
+2. TESTED ON
+[fill in, e.g.: iPhone 17 Pro, iOS 27.1; iPad Air 11-inch (M3), iPadOS 27.1]
 
-No account or login is needed. Ads: full-screen ads appear only between levels (every third completed level); rewarded videos are optional (extra time, extra hint). The tracking permission prompt appears shortly after first launch; the app works the same whichever answer is given.
+3. WHAT THE APP IS AND WHO IT IS FOR
+A single-player puzzle game for a general audience (not for children; not in the Kids category). The player finds a hidden sound by ear and walks to it past invisible obstacles before a countdown ends. The ground the player has walked stays lit, and reaching the sound reveals a picture. Four journeys of 30 levels each (Zen, Mystery, Tension, Cheerful). It offers a calm, screen-light kind of play, and is also playable without headphones.
 
-In-app purchase: "Remove ads" in Settings > Purchases, with "Restore purchases" next to it.
+4. HOW TO USE IT
+No account, login or setup. Play > choose a journey > level 1. A card shows the control scheme; press Start. Hold a finger on the screen and the glowing dot walks toward it. Follow the repeating sound: it is louder and faster as you get closer, and panned left or right. If you get stuck, press Hint (bottom right): a light shows the way and the obstacles appear briefly. Without headphones, wave rings show where the sound comes from. For testing, Easy difficulty (top of the journey screen) gives the most time.
 
-The Tension journey has a chaser that follows the player and is labelled "Not family friendly" in the menu.
+5. EXTERNAL SERVICES
+- Google AdMob (Google Mobile Ads SDK): full-screen ads between levels and optional rewarded videos.
+- Apple StoreKit: one non-consumable in-app purchase, "Remove ads" (Settings > Purchases, with "Restore purchases").
+Nothing else: no analytics SDK, no backend, no accounts, no AI services. Progress and settings are stored only on the device.
+
+6. REGIONS
+The app works the same in every region. It is in English and Turkish and follows the device language (changeable in Settings).
+
+7. CONTENT AND RIGHTS
+Not a regulated field. All sounds and pictures were made for this game by the developer; there is no third-party or licensed material and no user-generated content.
+
+PERMISSIONS
+- Tracking (App Tracking Transparency): asked shortly after first launch. If declined, ads are non-personalised; the game works the same either way.
+- Motion: used only by the optional tilt control (Settings > Controls > Tilt).
+The app does not use the microphone, camera, location, contacts or notifications, and plays no audio in the background (no background modes are declared).
+
+ADS
+Full-screen ads appear only between levels (after every one or two completed levels, chosen at random), never during play. Rewarded videos are always the player's choice (extra time, extra hint).
+
+OTHER
+The Tension journey has a chaser that follows the player and is labelled "Not family friendly" in the menu. The name on the Home Screen is "Echo Trail", the short form of the store name.
 ```
+
+### Lessons from earlier reviews
+
+What App Review raised on the two earlier apps (Tersten / Say It Backwards
+and Oyun Treni), and where each point stands here.
+
+| Guideline | What happened before | Echo Trail |
+|---|---|---|
+| 2.5.4 Background audio | Both apps declared `audio` in `UIBackgroundModes` without playing audio in the background. | Not declared: `iosBackgroundMode: false` for `react-native-audio-api` in `app.json`; the generated `Info.plist` has no `UIBackgroundModes` key (checked 15 November 2026). Re-check after any `prebuild`: `grep UIBackgroundModes ios/EchoTrail/Info.plist` must print nothing. |
+| 2.3.8 Name mismatch | The store name and the name on the device were unrelated. | Store "Echo Trail: Sound Maze" / "Echo Trail: Ses Labirenti", device "Echo Trail": the device name is the start of the store name. Keep it that way if the store name changes again. |
+| 1.3 Kids Category | Submitted in the Kids category: questions about analytics, ads and data, then a rejection for links and purchases without a parental gate. | Do **not** select the Kids category or "Made for Kids" (section 6). The app shows third-party ads and has no parental gate, so it must stay out of it. |
+| 2.1 Information needed | Apple asked for a screen recording on a physical device, tested devices, a description and audience, setup steps, external services, regional differences and rights. | All seven are answered in the notes above. Still to do: record the video and fill in the tested devices (section 9). |
+| 5.1.1 Purpose strings | Listed by Apple as a common issue. | Tracking and motion both have specific strings, in English and Turkish (`app.json`, `locales/`). |
+| 2.3.3 Screenshots | Listed by Apple as a common issue: screenshots must show the app in use. | Every screenshot is a capture of the running game; none is title art or the splash screen. |
+| 2.1 Crashes on review devices | Apple reviewed on an iPad Air 11-inch and an iPhone 17 Pro Max. | The app runs on iPad (portrait, full screen). Test a Release build on an iPad as well as an iPhone before submitting (section 9). |
 
 ## 9. Before you submit
 
@@ -382,21 +432,29 @@ without them, but they should be settled before a public release.
 
 - [ ] **Turkish store name.** Add the Turkish localization in App Store
       Connect and confirm `Echo Trail: Ses Labirenti` is free (section 1).
-- [ ] **AdMob app ID.** `app.json` › `react-native-google-mobile-ads` ›
-      `iosAppId` is Google's public *sample* ID. Replace it with your own.
-- [ ] **AdMob ad units.** Fill `AD_UNIT_IDS` in `src/config/monetization.ts`
-      (one interstitial, one rewarded). While they are empty, release builds
-      show Google's test ads.
+- [x] **AdMob app ID and ad units.** Set on 15 November 2026 (table below).
+      Development builds still use Google's test units; only release builds
+      request real ads. After changing the app ID, run `npm run prebuild`.
+
+      | What | ID | Where it is set |
+      |---|---|---|
+      | App ID | `ca-app-pub-4475107857161348~1377597514` | `app.json` › `react-native-google-mobile-ads` › `iosAppId` |
+      | Interstitial ad unit | `ca-app-pub-4475107857161348/5197423028` | `AD_UNIT_IDS.interstitial` in `src/config/monetization.ts` |
+      | Rewarded ad unit | `ca-app-pub-4475107857161348/7161066372` | `AD_UNIT_IDS.rewarded` in `src/config/monetization.ts` |
+
 - [ ] **app-ads.txt.** AdMob asks for an `app-ads.txt` file at the root of the
       developer website listed in the store. A project site
       (`serhaton.github.io/echo-trail/`) cannot serve the domain root; you need
       either a `serhaton.github.io` repository or a custom domain for it.
 - [ ] **SKAdNetwork IDs.** `app.json` lists only Google's own ID. Google
       publishes a longer list for its ad partners; add it for better ad fill.
-- [ ] **In-app purchase** created and in "Ready to Submit", and submitted
-      together with the first version (section 5).
-- [ ] **Version.** Set `version` in `app.json` to `1.0.0` and choose a build
-      number, then `npm run prebuild`.
+- [ ] **In-app purchase.** The product `com.serhatonal.echotrail.removeads`
+      was created in App Store Connect on 15 November 2026. Still to do: get
+      it to "Ready to Submit" (price, both localizations, image, review
+      screenshot and notes; section 5) and add it to the first version under
+      "In-App Purchases and Subscriptions" before submitting for review.
+- [x] **Version.** `app.json` says 1.0.0, build 1. For every further upload
+      raise `ios.buildNumber`, then `npm run prebuild`.
 - [ ] **Sounds.** Every sound is a synthesized placeholder
       (`assets/sounds/README.md` lists what each one should become). They are
       original and safe to ship, but they are not final sound design.
@@ -406,6 +464,14 @@ without them, but they should be settled before a public release.
       (`assets/images/PROMPTS.md` describes the final art).
 - [ ] **Levels.** Levels 11–30 (and all of Tension and Cheerful) are generated;
       play through them on a device and adjust the generator where needed.
+- [ ] **Screen recording for App Review.** On your iPhone (Control Centre ›
+      Screen Recording), starting from launching a fresh install: tracking
+      prompt, intro, one full level with a hint, the ad between levels, a
+      rewarded ad, Settings › Purchases with the purchase and restore. Attach
+      it in App Review Information › Attachment.
+- [ ] **Tested devices** written into point 2 of the review notes.
+- [ ] **iPad.** Run the Release build once on an iPad (or the iPad
+      simulator at least): Apple reviewed the earlier apps on an iPad Air.
 - [ ] **Release build on a real device.** Test with
       `npx expo run:ios --configuration Release --device`: controls (tilt
       especially: its resting pose is the phone held with the top edge

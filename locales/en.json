@@ -1,4 +1,5 @@
 {
   "CFBundleDisplayName": "Echo Trail",
-  "NSUserTrackingUsageDescription": "Your data is used to show you more relevant ads. You can keep playing either way."
+  "NSUserTrackingUsageDescription": "Your data is used to show you more relevant ads. You can keep playing either way.",
+  "NSMotionUsageDescription": "Motion is used only for the optional tilt control: you tilt the device to walk."
 }
