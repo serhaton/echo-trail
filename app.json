@@ -17,7 +17,7 @@
     },
     "ios": {
       "bundleIdentifier": "com.serhatonal.echotrail",
-      "buildNumber": "1",
+      "buildNumber": "3",
       "supportsTablet": true,
       "requireFullScreen": true,
       "infoPlist": {
@@ -60,7 +60,8 @@
       [
         "react-native-audio-api",
         {
-          "iosBackgroundMode": false
+          "iosBackgroundMode": false,
+          "iosMicrophonePermission": "Echo Trail does not record or listen to anything. The sound engine it is built on requires this text; the microphone is never turned on."
         }
       ],
       [

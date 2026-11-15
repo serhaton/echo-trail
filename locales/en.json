@@ -1,5 +1,6 @@
 {
   "CFBundleDisplayName": "Echo Trail",
   "NSUserTrackingUsageDescription": "Your data is used to show you more relevant ads. You can keep playing either way.",
-  "NSMotionUsageDescription": "Motion is used only for the optional tilt control: you tilt the device to walk."
+  "NSMotionUsageDescription": "Motion is used only for the optional tilt control: you tilt the device to walk.",
+  "NSMicrophoneUsageDescription": "Echo Trail does not record or listen to anything. The sound engine it is built on requires this text; the microphone is never turned on."
 }

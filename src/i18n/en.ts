@@ -128,6 +128,8 @@ export const en = {
     watchAdEscape: 'Watch an ad, shake it off',
     timeUpZen: "The bell has faded. No rush — you can still finish, for one star.",
     watchAdTime: 'Watch an ad, +{{seconds}} seconds',
+    adLoading: 'Looking for an ad…',
+    adUnavailable: 'No ad is available right now. Try again in a moment.',
   },
   /** Level titles shown on journey screens. */
   levels: {

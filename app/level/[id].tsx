@@ -821,12 +821,15 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
     setPhase('playing');
   };
 
-  /** Mystery time-up: watch a (mock) rewarded ad for +15 seconds. */
+  /** No video could be shown (or it was closed early): say so instead of doing nothing. */
+  const adUnavailable = () => setToast({ key: Date.now(), text: t('level.adUnavailable') });
+
+  /** Mystery time-up: watch a rewarded ad for +15 seconds. */
   const watchAdForTime = async () => {
     setAdLoading(true);
     const rewarded = await ads.showRewarded('extraTime');
     setAdLoading(false);
-    if (!rewarded) return;
+    if (!rewarded) return adUnavailable();
     countdown.current.addTime(REWARDED_EXTRA_SECONDS);
     timerFraction.set(countdown.current.fraction);
     secondsLeft.set(Math.ceil(countdown.current.remaining));
@@ -840,7 +843,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
     setAdLoading(true);
     const rewarded = await ads.showRewarded('extraTime');
     setAdLoading(false);
-    if (!rewarded) return;
+    if (!rewarded) return adUnavailable();
     resetChaser();
     target.current?.start();
     chaserSource.current?.start();
@@ -856,6 +859,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
       const rewarded = await ads.showRewarded('extraHint');
       setPhase('playing');
       if (rewarded && hints.current.activate(true)) showHint();
+      else if (!rewarded) adUnavailable();
     }
     hintStore.set(hints.current.snapshot);
   };
@@ -1115,7 +1119,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
           <Text style={styles.cardTitle}>{t('level.timeUp')}</Text>
           <MenuButton
             variant="primary"
-            label={t('level.watchAdTime', { seconds: REWARDED_EXTRA_SECONDS })}
+            label={adLoading ? t('level.adLoading') : t('level.watchAdTime', { seconds: REWARDED_EXTRA_SECONDS })}
             onPress={watchAdForTime}
             disabled={adLoading}
           />
@@ -1176,7 +1180,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
           <Text style={styles.cardTitle}>{t('level.caught')}</Text>
           <MenuButton
             variant="primary"
-            label={t('level.watchAdEscape')}
+            label={adLoading ? t('level.adLoading') : t('level.watchAdEscape')}
             onPress={watchAdToEscape}
             disabled={adLoading}
           />

@@ -33,7 +33,7 @@ that every field below fits.
 | Price | Free **(decide)** |
 | Availability | All countries or regions **(decide)** |
 | Copyright | `© 2026 Serhat Onal` |
-| Version | 1.0.0, build 1 (`version` and `ios.buildNumber` in `app.json`) |
+| Version | 1.0.0, build 3 (`version` and `ios.buildNumber` in `app.json`) |
 | Export compliance | Uses no non-exempt encryption (already declared in the app: `ITSAppUsesNonExemptEncryption = false`) |
 | Advertising identifier | Yes, the app uses the IDFA to serve ads (through AdMob, behind the tracking prompt) |
 
@@ -368,8 +368,7 @@ requests non-personalised ads if the player declines.
 | Sign-in required | No |
 | Contact name, phone, email | **(decide)** yours; not shown publicly |
 
-**Notes for the reviewer** (4000 max; paste all of it, after filling in the
-tested devices). It answers, up front, every question App Review asked about
+**Notes for the reviewer** (4000 max; paste all of it). It answers, up front, every question App Review asked about
 the two earlier apps (see "Lessons from earlier reviews" below):
 
 ```
@@ -379,7 +378,7 @@ Echo Trail: Sound Maze is an audio game: the screen is intentionally almost blac
 A recording made on a physical iPhone is attached. It starts with launching the app and shows: the tracking permission prompt, the intro, a full level (walk, hint, reaching the sound, picture reveal), an ad between levels, a rewarded ad, and the "Remove ads" purchase and "Restore purchases" in Settings.
 
 2. TESTED ON
-[fill in, e.g.: iPhone 17 Pro, iOS 27.1; iPad Air 11-inch (M3), iPadOS 27.1]
+iPhone 16, iOS 27.2; iPhone 17 Pro, iOS 26.2; iPad Pro 13-inch (M5) simulator, iPadOS 27.2
 
 3. WHAT THE APP IS AND WHO IT IS FOR
 A single-player puzzle game for a general audience (not for children; not in the Kids category). The player finds a hidden sound by ear and walks to it past invisible obstacles before a countdown ends. The ground the player has walked stays lit, and reaching the sound reveals a picture. Four journeys of 30 levels each (Zen, Mystery, Tension, Cheerful). It offers a calm, screen-light kind of play, and is also playable without headphones.
@@ -401,7 +400,8 @@ Not a regulated field. All sounds and pictures were made for this game by the de
 PERMISSIONS
 - Tracking (App Tracking Transparency): asked shortly after first launch. If declined, ads are non-personalised; the game works the same either way.
 - Motion: used only by the optional tilt control (Settings > Controls > Tilt).
-The app does not use the microphone, camera, location, contacts or notifications, and plays no audio in the background (no background modes are declared).
+- Microphone: never used and never requested. Info.plist carries a microphone purpose string only because the audio playback library (react-native-audio-api) links the recording APIs and App Store validation requires the string; the app has no recording feature and the prompt never appears.
+The app does not use the camera, location, contacts or notifications, and plays no audio in the background (no background modes are declared).
 
 ADS
 Full-screen ads appear only between levels (after every one or two completed levels, chosen at random), never during play. Rewarded videos are always the player's choice (extra time, extra hint).
@@ -421,7 +421,7 @@ and Oyun Treni), and where each point stands here.
 | 2.3.8 Name mismatch | The store name and the name on the device were unrelated. | Store "Echo Trail: Sound Maze" / "Echo Trail: Ses Labirenti", device "Echo Trail": the device name is the start of the store name. Keep it that way if the store name changes again. |
 | 1.3 Kids Category | Submitted in the Kids category: questions about analytics, ads and data, then a rejection for links and purchases without a parental gate. | Do **not** select the Kids category or "Made for Kids" (section 6). The app shows third-party ads and has no parental gate, so it must stay out of it. |
 | 2.1 Information needed | Apple asked for a screen recording on a physical device, tested devices, a description and audience, setup steps, external services, regional differences and rights. | All seven are answered in the notes above. Still to do: record the video and fill in the tested devices (section 9). |
-| 5.1.1 Purpose strings | Listed by Apple as a common issue. | Tracking and motion both have specific strings, in English and Turkish (`app.json`, `locales/`). |
+| 5.1.1 Purpose strings | Listed by Apple as a common issue. | Tracking and motion both have specific strings, in English and Turkish (`app.json`, `locales/`). A microphone string is also present because upload validation demands it for the audio library (ITMS-90683, hit on build 1), although the app never uses the microphone; the review notes say so. |
 | 2.3.3 Screenshots | Listed by Apple as a common issue: screenshots must show the app in use. | Every screenshot is a capture of the running game; none is title art or the splash screen. |
 | 2.1 Crashes on review devices | Apple reviewed on an iPad Air 11-inch and an iPhone 17 Pro Max. | The app runs on iPad (portrait, full screen). Test a Release build on an iPad as well as an iPhone before submitting (section 9). |
 
@@ -453,7 +453,7 @@ without them, but they should be settled before a public release.
       it to "Ready to Submit" (price, both localizations, image, review
       screenshot and notes; section 5) and add it to the first version under
       "In-App Purchases and Subscriptions" before submitting for review.
-- [x] **Version.** `app.json` says 1.0.0, build 1. For every further upload
+- [x] **Version.** `app.json` says 1.0.0, build 3 (build 1 was refused at upload: missing microphone purpose string, ITMS-90683; build 2 could show no ads when the first ad load failed or the store was slow). For every further upload
       raise `ios.buildNumber`, then `npm run prebuild`.
 - [ ] **Sounds.** Every sound is a synthesized placeholder
       (`assets/sounds/README.md` lists what each one should become). They are
@@ -469,7 +469,8 @@ without them, but they should be settled before a public release.
       prompt, intro, one full level with a hint, the ad between levels, a
       rewarded ad, Settings › Purchases with the purchase and restore. Attach
       it in App Review Information › Attachment.
-- [ ] **Tested devices** written into point 2 of the review notes.
+- [x] **Tested devices** written into point 2 of the review notes (check
+      the model names against Settings › General › About before pasting).
 - [ ] **iPad.** Run the Release build once on an iPad (or the iPad
       simulator at least): Apple reviewed the earlier apps on an iPad Air.
 - [ ] **Release build on a real device.** Test with

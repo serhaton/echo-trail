@@ -90,7 +90,13 @@ export const ads = {
   },
 
   async showRewarded(placement: RewardedPlacement): Promise<boolean> {
-    await this.init();
+    // Never leave the player on a dead button: if the SDK is still starting
+    // after a while, report "no ad" and let them carry on.
+    const ready = await Promise.race([
+      this.init().then(() => true),
+      new Promise<boolean>((resolve) => setTimeout(() => resolve(false), INIT_WAIT_MS)),
+    ]);
+    if (!ready) return false;
     return withAudioPaused(() => provider.showRewarded(placement));
   },
 
@@ -104,7 +110,12 @@ export const ads = {
     levelsUntilInterstitial -= 1;
     if (levelsUntilInterstitial > 0) return;
     levelsUntilInterstitial = drawInterstitialGap();
-    await this.init();
+    // "Next level" must never hang on the ad SDK: if it has not started yet, skip this one.
+    const ready = await Promise.race([
+      this.init().then(() => true),
+      new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 1500)),
+    ]);
+    if (!ready) return;
     await withAudioPaused(() => provider.showInterstitial());
   },
 };
@@ -117,6 +128,9 @@ function drawInterstitialGap(): number {
 
 /** Counts down per completed level; kept in memory, so it restarts with the app. */
 let levelsUntilInterstitial = drawInterstitialGap();
+
+/** Longest a rewarded request waits for the ad SDK to start (ms). */
+const INIT_WAIT_MS = 10_000;
 
 /** Seconds granted by the "watch an ad" option when time runs out. */
 export const REWARDED_EXTRA_SECONDS = 15;

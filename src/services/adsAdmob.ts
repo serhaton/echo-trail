@@ -17,6 +17,14 @@ import type { AdsProvider, RewardedPlacement } from './ads';
 /** How long to wait for an ad that isn't loaded yet before giving up (ms). */
 const LOAD_TIMEOUT_MS = 8000;
 
+/**
+ * A load that fails (no ad available yet, no network) is tried again after
+ * this long, doubling each time up to the maximum. Without it one failed
+ * load would leave the whole session without ads.
+ */
+const RETRY_FIRST_MS = 20_000;
+const RETRY_MAX_MS = 5 * 60_000;
+
 /** Test units in development or while real ids are missing. */
 const unit = (real: string, test: string) => (__DEV__ || !real ? test : real);
 const INTERSTITIAL_UNIT = unit(AD_UNIT_IDS.interstitial, TestIds.INTERSTITIAL);
@@ -35,6 +43,10 @@ export class AdmobAdsProvider implements AdsProvider {
   private nonPersonalized = true;
   private interstitial: InterstitialAd | null = null;
   private rewarded: RewardedAd | null = null;
+  private interstitialRetry = RETRY_FIRST_MS;
+  private rewardedRetry = RETRY_FIRST_MS;
+  private interstitialTimer: ReturnType<typeof setTimeout> | null = null;
+  private rewardedTimer: ReturnType<typeof setTimeout> | null = null;
 
   async init() {
     let { status } = await getTrackingPermissionsAsync();
@@ -51,15 +63,36 @@ export class AdmobAdsProvider implements AdsProvider {
   }
 
   private loadInterstitial() {
+    if (this.interstitialTimer) clearTimeout(this.interstitialTimer);
+    this.interstitialTimer = null;
     const ad = InterstitialAd.createForAdRequest(INTERSTITIAL_UNIT, this.request);
-    ad.addAdEventListener(AdEventType.ERROR, (error) => console.warn('[ads] interstitial', error));
+    ad.addAdEventListener(AdEventType.LOADED, () => {
+      this.interstitialRetry = RETRY_FIRST_MS;
+    });
+    ad.addAdEventListener(AdEventType.ERROR, (error) => {
+      console.warn('[ads] interstitial', error);
+      // Only a failed LOAD is retried here; a failed show reloads in showInterstitial.
+      if (this.interstitial !== ad || ad.loaded || this.interstitialTimer) return;
+      this.interstitialTimer = setTimeout(() => this.loadInterstitial(), this.interstitialRetry);
+      this.interstitialRetry = Math.min(this.interstitialRetry * 2, RETRY_MAX_MS);
+    });
     ad.load();
     this.interstitial = ad;
   }
 
   private loadRewarded() {
+    if (this.rewardedTimer) clearTimeout(this.rewardedTimer);
+    this.rewardedTimer = null;
     const ad = RewardedAd.createForAdRequest(REWARDED_UNIT, this.request);
-    ad.addAdEventListener(AdEventType.ERROR, (error) => console.warn('[ads] rewarded', error));
+    ad.addAdEventListener(RewardedAdEventType.LOADED, () => {
+      this.rewardedRetry = RETRY_FIRST_MS;
+    });
+    ad.addAdEventListener(AdEventType.ERROR, (error) => {
+      console.warn('[ads] rewarded', error);
+      if (this.rewarded !== ad || ad.loaded || this.rewardedTimer) return;
+      this.rewardedTimer = setTimeout(() => this.loadRewarded(), this.rewardedRetry);
+      this.rewardedRetry = Math.min(this.rewardedRetry * 2, RETRY_MAX_MS);
+    });
     ad.load();
     this.rewarded = ad;
   }
@@ -67,7 +100,8 @@ export class AdmobAdsProvider implements AdsProvider {
   showInterstitial(): Promise<void> {
     const ad = this.interstitial;
     if (!ad?.loaded) {
-      // Never make the player wait for an ad between levels.
+      // Never make the player wait for an ad between levels. If the last
+      // load failed, a retry is already scheduled.
       if (!ad) this.loadInterstitial();
       return Promise.resolve();
     }

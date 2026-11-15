@@ -122,6 +122,8 @@ export const tr: Translation = {
     watchAdEscape: 'Reklam izle, izini kaybettir',
     timeUpZen: 'Çan sustu. Acele yok, yine de bitirebilirsin; tek yıldız alırsın.',
     watchAdTime: 'Reklam izle, +{{seconds}} saniye',
+    adLoading: 'Reklam aranıyor…',
+    adUnavailable: 'Şu anda gösterilecek reklam yok. Biraz sonra tekrar dene.',
   },
   levels: {
     'zen-01': "Şafakta Orman",
