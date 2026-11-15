@@ -25,6 +25,18 @@ const LOAD_TIMEOUT_MS = 8000;
 const RETRY_FIRST_MS = 20_000;
 const RETRY_MAX_MS = 5 * 60_000;
 
+/** What happened to the latest load of one ad format (shown in the hidden ad status readout). */
+interface LoadState {
+  state: 'idle' | 'loading' | 'loaded' | 'failed';
+  attempts: number;
+  error: string;
+}
+const newLoadState = (): LoadState => ({ state: 'idle', attempts: 0, error: '' });
+const describeError = (error: unknown) => {
+  const e = error as { code?: string; message?: string } | null;
+  return [e?.code, e?.message].filter(Boolean).join(': ') || String(error);
+};
+
 /** Test units in development or while real ids are missing. */
 const unit = (real: string, test: string) => (__DEV__ || !real ? test : real);
 const INTERSTITIAL_UNIT = unit(AD_UNIT_IDS.interstitial, TestIds.INTERSTITIAL);
@@ -43,6 +55,10 @@ export class AdmobAdsProvider implements AdsProvider {
   private nonPersonalized = true;
   private interstitial: InterstitialAd | null = null;
   private rewarded: RewardedAd | null = null;
+  private tracking = 'not asked';
+  private sdk = 'not started';
+  private interstitialState = newLoadState();
+  private rewardedState = newLoadState();
   private interstitialRetry = RETRY_FIRST_MS;
   private rewardedRetry = RETRY_FIRST_MS;
   private interstitialTimer: ReturnType<typeof setTimeout> | null = null;
@@ -52,8 +68,11 @@ export class AdmobAdsProvider implements AdsProvider {
     let { status } = await getTrackingPermissionsAsync();
     if (status === 'undetermined') ({ status } = await requestTrackingPermissionsAsync());
     this.nonPersonalized = status !== 'granted';
+    this.tracking = status;
 
+    this.sdk = 'starting';
     await mobileAds().initialize();
+    this.sdk = 'started';
     this.loadInterstitial();
     this.loadRewarded();
   }
@@ -66,11 +85,14 @@ export class AdmobAdsProvider implements AdsProvider {
     if (this.interstitialTimer) clearTimeout(this.interstitialTimer);
     this.interstitialTimer = null;
     const ad = InterstitialAd.createForAdRequest(INTERSTITIAL_UNIT, this.request);
+    this.interstitialState = { ...this.interstitialState, state: 'loading', attempts: this.interstitialState.attempts + 1 };
     ad.addAdEventListener(AdEventType.LOADED, () => {
       this.interstitialRetry = RETRY_FIRST_MS;
+      this.interstitialState = { ...this.interstitialState, state: 'loaded', error: '' };
     });
     ad.addAdEventListener(AdEventType.ERROR, (error) => {
       console.warn('[ads] interstitial', error);
+      this.interstitialState = { ...this.interstitialState, state: 'failed', error: describeError(error) };
       // Only a failed LOAD is retried here; a failed show reloads in showInterstitial.
       if (this.interstitial !== ad || ad.loaded || this.interstitialTimer) return;
       this.interstitialTimer = setTimeout(() => this.loadInterstitial(), this.interstitialRetry);
@@ -84,17 +106,33 @@ export class AdmobAdsProvider implements AdsProvider {
     if (this.rewardedTimer) clearTimeout(this.rewardedTimer);
     this.rewardedTimer = null;
     const ad = RewardedAd.createForAdRequest(REWARDED_UNIT, this.request);
+    this.rewardedState = { ...this.rewardedState, state: 'loading', attempts: this.rewardedState.attempts + 1 };
     ad.addAdEventListener(RewardedAdEventType.LOADED, () => {
       this.rewardedRetry = RETRY_FIRST_MS;
+      this.rewardedState = { ...this.rewardedState, state: 'loaded', error: '' };
     });
     ad.addAdEventListener(AdEventType.ERROR, (error) => {
       console.warn('[ads] rewarded', error);
+      this.rewardedState = { ...this.rewardedState, state: 'failed', error: describeError(error) };
       if (this.rewarded !== ad || ad.loaded || this.rewardedTimer) return;
       this.rewardedTimer = setTimeout(() => this.loadRewarded(), this.rewardedRetry);
       this.rewardedRetry = Math.min(this.rewardedRetry * 2, RETRY_MAX_MS);
     });
     ad.load();
     this.rewarded = ad;
+  }
+
+  /** Plain-text status for the hidden readout in Settings. */
+  diagnostics(): string[] {
+    const line = (name: string, unit: string, s: LoadState) =>
+      `${name}: ${s.state}, attempt ${s.attempts}, unit …${unit.slice(-10)}${s.error ? `\n  ${s.error}` : ''}`;
+    return [
+      `tracking permission: ${this.tracking}`,
+      `ad SDK: ${this.sdk}`,
+      `requests: ${this.nonPersonalized ? 'non-personalised' : 'personalised'}`,
+      line('interstitial', INTERSTITIAL_UNIT, this.interstitialState),
+      line('rewarded', REWARDED_UNIT, this.rewardedState),
+    ];
   }
 
   showInterstitial(): Promise<void> {

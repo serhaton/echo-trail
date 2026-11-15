@@ -11,6 +11,7 @@ import { useStoreValue } from '@/game/valueStore';
 import { useAudioOutput } from '@/hooks/useAudioOutput';
 import { useTranslation, type LanguagePreference } from '@/i18n';
 import { goBack } from '@/navigation/goBack';
+import { ads } from '@/services/ads';
 import { useProgress } from '@/services/ProgressProvider';
 import { purchases } from '@/services/purchases';
 import type { AudioOutputPreference } from '@/services/settings';
@@ -30,6 +31,8 @@ export default function SettingsScreen() {
   const removeAds = useStoreValue(purchases.removeAds);
   const price = useStoreValue(purchases.price);
   const [buying, setBuying] = useState(false);
+  /** Hidden ad status readout (long-press the title); null = closed. */
+  const [adStatus, setAdStatus] = useState<string | null>(null);
   const [buyNote, setBuyNote] = useState<string | null>(null);
 
   const onBuy = async () => {
@@ -75,7 +78,10 @@ export default function SettingsScreen() {
 
   return (
     <Screen>
-      <Text style={styles.title}>{t('settings.title')}</Text>
+      {/* Long-press the title: hidden ad status readout, for checking a store build. */}
+      <Text style={styles.title} onLongPress={() => setAdStatus((s) => (s === null ? ads.diagnostics() : null))}>
+        {t('settings.title')}
+      </Text>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         <View style={styles.section}>
@@ -176,6 +182,16 @@ export default function SettingsScreen() {
           {restore === 'none' && <Text style={styles.help}>{t('settings.restoreNone')}</Text>}
           {restore === 'done' && <Text style={styles.help}>{t('settings.restoreDone')}</Text>}
         </View>
+
+        {adStatus !== null && (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>AD STATUS</Text>
+            <Text style={styles.help} selectable>
+              {adStatus}
+            </Text>
+            <MenuButton compact label="Refresh" onPress={() => setAdStatus(ads.diagnostics())} />
+          </View>
+        )}
 
         {/* Developer tools: compiled out of release builds. */}
         {__DEV__ && (

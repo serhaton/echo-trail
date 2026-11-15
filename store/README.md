@@ -33,7 +33,7 @@ that every field below fits.
 | Price | Free **(decide)** |
 | Availability | All countries or regions **(decide)** |
 | Copyright | `© 2026 Serhat Onal` |
-| Version | 1.0.0, build 3 (`version` and `ios.buildNumber` in `app.json`) |
+| Version | 1.0.0, build 4 (`version` and `ios.buildNumber` in `app.json`) |
 | Export compliance | Uses no non-exempt encryption (already declared in the app: `ITSAppUsesNonExemptEncryption = false`) |
 | Advertising identifier | Yes, the app uses the IDFA to serve ads (through AdMob, behind the tracking prompt) |
 
@@ -375,7 +375,7 @@ the two earlier apps (see "Lessons from earlier reviews" below):
 Echo Trail: Sound Maze is an audio game: the screen is intentionally almost black during play. Please use headphones and turn the volume up.
 
 1. SCREEN RECORDING
-A recording made on a physical iPhone is attached. It starts with launching the app and shows: the tracking permission prompt, the intro, a full level (walk, hint, reaching the sound, picture reveal), an ad between levels, a rewarded ad, and the "Remove ads" purchase and "Restore purchases" in Settings.
+A recording made on a physical iPhone is attached. It starts with launching the app and shows: the tracking permission prompt, the intro, a full level (walk, hint, reaching the sound, picture reveal), and the "Remove ads" purchase and "Restore purchases" in Settings. It does not show ads: see ADS below.
 
 2. TESTED ON
 iPhone 16, iOS 27.2; iPhone 17 Pro, iOS 26.2; iPad Pro 13-inch (M5) simulator, iPadOS 27.2
@@ -405,6 +405,7 @@ The app does not use the camera, location, contacts or notifications, and plays 
 
 ADS
 Full-screen ads appear only between levels (after every one or two completed levels, chosen at random), never during play. Rewarded videos are always the player's choice (extra time, extra hint).
+Please note: the AdMob ad units are new and the app is not on the App Store yet, so AdMob currently answers every request with "no fill" (no ad to show), also on our own devices. Until AdMob starts serving, no full-screen ad appears between levels, and the "Watch an ad" buttons show "Looking for an ad…" and then "No ad is available right now. Try again in a moment."; the game continues normally (Retry stays available). This is the intended behaviour when no ad is available, not a fault.
 
 OTHER
 The Tension journey has a chaser that follows the player and is labelled "Not family friendly" in the menu. The name on the Home Screen is "Echo Trail", the short form of the store name.
@@ -453,7 +454,7 @@ without them, but they should be settled before a public release.
       it to "Ready to Submit" (price, both localizations, image, review
       screenshot and notes; section 5) and add it to the first version under
       "In-App Purchases and Subscriptions" before submitting for review.
-- [x] **Version.** `app.json` says 1.0.0, build 3 (build 1 was refused at upload: missing microphone purpose string, ITMS-90683; build 2 could show no ads when the first ad load failed or the store was slow). For every further upload
+- [x] **Version.** `app.json` says 1.0.0, build 4 (build 1 was refused at upload: missing microphone purpose string, ITMS-90683; build 2 could show no ads when the first ad load failed or the store was slow). For every further upload
       raise `ios.buildNumber`, then `npm run prebuild`.
 - [ ] **Sounds.** Every sound is a synthesized placeholder
       (`assets/sounds/README.md` lists what each one should become). They are
@@ -466,9 +467,15 @@ without them, but they should be settled before a public release.
       play through them on a device and adjust the generator where needed.
 - [ ] **Screen recording for App Review.** On your iPhone (Control Centre ›
       Screen Recording), starting from launching a fresh install: tracking
-      prompt, intro, one full level with a hint, the ad between levels, a
-      rewarded ad, Settings › Purchases with the purchase and restore. Attach
-      it in App Review Information › Attachment.
+      prompt, intro, one full level with a hint, Settings › Purchases with
+      the purchase and restore. Ads cannot be recorded yet (AdMob returns
+      "no fill" until the app is live); the review notes say so. Attach the
+      recording in App Review Information › Attachment.
+- [ ] **After release: AdMob.** Link the App Store listing to the app in
+      AdMob and wait for AdMob's own review; ads start after that. To check
+      on a device: Settings, long-press the title "Settings" for the hidden
+      AD STATUS readout (`loaded` means an ad is ready; `no-fill` means
+      AdMob has none to give).
 - [x] **Tested devices** written into point 2 of the review notes (check
       the model names against Settings › General › About before pasting).
 - [ ] **iPad.** Run the Release build once on an iPad (or the iPad

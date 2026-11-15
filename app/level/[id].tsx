@@ -213,6 +213,8 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
   // Read once per level: turning the demo off mid-card must not restart loading.
   const showControlIntro = useRef(settings.showControlIntro && !demo);
   const collectibles = useMemo(() => level.collectibles ?? [], [level]);
+  /** True when every hidden sound of the level is a star to collect (the Cheerful journey). */
+  const starLevel = collectibles.length > 0 && collectibles.every((c) => c.reward.kind === 'star');
   useKeepScreenAwake();
 
   // Tilt control: listen to the accelerometer only while it's the chosen scheme.
@@ -629,7 +631,12 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
       // 5) Reached the target? (Checked before the clock: a tie goes to the player.)
       if (distance(pos.current, level.target.position) < reachRadius) {
         const cd = countdown.current;
-        const earned = starsFor(cd.remaining, cd.total, timedOut.current);
+        // Cheerful: the level's three stars are lying on the ground, so the
+        // rating is how many of them were picked up (at least one for
+        // finishing). Everywhere else it is the share of time left.
+        const earned = starLevel
+          ? (Math.min(3, Math.max(1, collectedIds.current.size)) as StarCount)
+          : starsFor(cd.remaining, cd.total, timedOut.current);
         setStars(earned);
         recordCompletion(level.id, earned, [...collectedIds.current]);
         audioEngine.destroySource(TARGET_SOURCE_ID);
@@ -747,6 +754,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
       chaserCenter,
       chaserProximity,
       recordCompletion,
+      starLevel,
       stopMoving,
       playerCenter,
       joyOrigin,
@@ -1207,7 +1215,7 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
           {collectibles.length > 0 && (
             <Text style={styles.collected}>
               {t(
-                collectibles.every((c) => c.reward.kind === 'star')
+                starLevel
                   ? 'collect.stars'
                   : 'collect.found',
                 { found: collected.length, total: collectibles.length },

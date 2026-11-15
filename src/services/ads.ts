@@ -26,6 +26,8 @@ export interface AdsProvider {
   showRewarded(placement: RewardedPlacement): Promise<boolean>;
   /** Resolves when the interstitial is closed (or immediately if none is ready). */
   showInterstitial(): Promise<void>;
+  /** Optional plain-text status lines (hidden readout in Settings). */
+  diagnostics?(): string[];
 }
 
 /** Development mock: no UI, short delay, always rewards. */
@@ -56,6 +58,7 @@ class NoAdsProvider implements AdsProvider {
 
 let provider: AdsProvider = new MockAdsProvider();
 let initPromise: Promise<void> | null = null;
+let initError = '';
 
 /** Run `show` with the game audio paused. */
 async function withAudioPaused<T>(show: () => Promise<T>): Promise<T> {
@@ -82,11 +85,27 @@ export const ads = {
           // In development fall back to the mock so work can continue; in a
           // release build never hand out rewards without an ad.
           console.warn('[ads] AdMob unavailable', error);
+          initError = error instanceof Error ? error.message : String(error);
           if (!__DEV__) provider = new NoAdsProvider();
         }
       }
     })();
     return initPromise;
+  },
+
+  /**
+   * Status of the ad system as plain text, for the hidden readout in
+   * Settings (long-press the title). Helps tell "no ad available yet" from
+   * a real fault on a TestFlight or App Store build.
+   */
+  diagnostics(): string {
+    return [
+      `provider: ${ADS_PROVIDER}, started: ${initPromise ? 'yes' : 'no'}`,
+      `remove ads owned: ${purchases.hasRemoveAds() ? 'yes' : 'no'}`,
+      `levels until next interstitial: ${levelsUntilInterstitial}`,
+      ...(initError ? [`start failed: ${initError}`] : []),
+      ...(provider.diagnostics?.() ?? ['(no details from this provider)']),
+    ].join('\n');
   },
 
   async showRewarded(placement: RewardedPlacement): Promise<boolean> {
