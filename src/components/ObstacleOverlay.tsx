@@ -5,8 +5,8 @@ import type { Obstacle } from '@/data/levels';
 
 interface ObstacleOverlayProps {
   obstacles: readonly Obstacle[];
-  /** 0 = hidden. Animated by the level (hint flash, end-of-level reveal). */
-  opacity: SharedValue<number>;
+  /** 0 = hidden. Animated by the level (hint flash, end-of-level reveal) or fixed. */
+  opacity: SharedValue<number> | number;
   color: string;
 }
 

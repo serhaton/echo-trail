@@ -39,7 +39,7 @@ export const tension11: LevelDefinition = {
     },
   ],
   // It appears where you began, a few seconds after you set off.
-  chaser: { start: { x: 113, y: 788 }, delaySeconds: 5 },
+  chaser: { start: { x: 113, y: 788 }, delaySeconds: 8 },
   ambience: 'ambDread',
   baseTimeSeconds: 95,
   revealImage: require('@assets/images/tension/tension-11.webp'),

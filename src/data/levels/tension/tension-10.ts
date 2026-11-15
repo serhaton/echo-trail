@@ -27,7 +27,7 @@ export const tension10: LevelDefinition = {
     },
   ],
   // It appears where you began, a few seconds after you set off.
-  chaser: { start: { x: 375, y: 850 }, delaySeconds: 5 },
+  chaser: { start: { x: 375, y: 850 }, delaySeconds: 8 },
   ambience: 'ambDread',
   baseTimeSeconds: 130,
   revealImage: require('@assets/images/tension/tension-10.webp'),

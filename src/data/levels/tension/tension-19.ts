@@ -58,7 +58,7 @@ export const tension19: LevelDefinition = {
     },
   ],
   // It appears where you began, a few seconds after you set off.
-  chaser: { start: { x: 75, y: 810 }, delaySeconds: 5 },
+  chaser: { start: { x: 75, y: 810 }, delaySeconds: 8 },
   ambience: 'ambDread',
   baseTimeSeconds: 100,
   revealImage: require('@assets/images/tension/tension-19.webp'),

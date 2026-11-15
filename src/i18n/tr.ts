@@ -76,7 +76,7 @@ export const tr: Translation = {
     controlJoystickHelp: 'Ekranın herhangi bir yerine dokun ve yürümek istediğin yöne sürükle.',
     controlTilt: 'Eğerek',
     controlTiltHelp:
-      'Telefonu tepsi gibi düz tut. Eğdiğin yöne yürürsün; ne kadar eğersen o kadar hızlı. Düz tutarsan durursun.',
+      'Telefonu üst kenarı hafifçe sana doğru kalkık tut: dinlenme konumu budur. Oradan eğdiğin yöne yürürsün; ne kadar eğersen o kadar hızlı.',
     sound: 'Ses',
     sfxVolume: 'Efektler',
     ambientVolume: 'Ortam',

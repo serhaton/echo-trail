@@ -33,7 +33,7 @@ export const tension07: LevelDefinition = {
     },
   ],
   // It appears where you began, a few seconds after you set off.
-  chaser: { start: { x: 270, y: 850 }, delaySeconds: 5 },
+  chaser: { start: { x: 270, y: 850 }, delaySeconds: 8 },
   ambience: 'ambDread',
   baseTimeSeconds: 75,
   requiredStars: 13,

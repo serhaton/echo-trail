@@ -56,7 +56,7 @@ CONTENT = {
         "footer": f"© 2026 {DEVELOPER}",
         "privacy": {
             "title": "Privacy Policy",
-            "intro": f"This policy explains what information the Echo Trail app (“the app”) handles. Echo Trail is made by {DEVELOPER} (“I”, “me”). Effective date: {{date}}.",
+            "intro": f"This policy explains what information the Echo Trail: Sound Maze app (“the app”, “Echo Trail”) handles. Echo Trail is made by {DEVELOPER} (“I”, “me”). Effective date: {{date}}.",
             "sections": [
                 ("The short version", [
                     "The app has no accounts and I do not run any server that receives your data.",
@@ -105,7 +105,7 @@ CONTENT = {
                 ("Do I need headphones?", "They are strongly recommended: the game tells you the direction through your left and right ear. Without headphones the game shows soft wave rings coming from the direction of the sound. You can force either behaviour in Settings › Sound output."),
                 ("How do I tell whether the sound is in front of me or behind me?", "A sound behind you is duller and lower in pitch. The target's strikes also come faster as you get closer, so walk a few steps: if the rhythm speeds up, you are heading the right way."),
                 ("How do I change the controls?", "Three ways to move: follow your finger, a joystick, or tilting the phone. Change them in Settings › Controls, on the card shown before each level, or with the button at the bottom-left during a level."),
-                ("Tilt controls move me when I'm not tilting.", "With tilt controls, “flat” is the resting position: hold the phone level, like a tray. The more you tilt it, the faster you walk."),
+                ("Tilt controls move me when I'm not tilting.", "With tilt controls the resting position is the phone held with its top edge raised slightly toward you, as you would naturally hold it to look at the screen. Tilt it from there to walk; the more you tilt, the faster."),
                 ("What do hints do?", "A hint shows a light pointing along the way to the sound and briefly reveals the obstacles. You get one free hint per level; more are available by watching a rewarded video."),
                 ("I bought “Remove ads” but still see ads.", "The purchase removes the ads shown between levels. Rewarded videos stay available because you choose to watch them. If ads between levels still appear, open Settings › Purchases and tap “Restore purchases”."),
                 ("How do I restore my purchase on a new device?", "Sign in with the same Apple ID, open Settings › Purchases in the game and tap “Restore purchases”."),
@@ -149,7 +149,7 @@ CONTENT = {
         "footer": f"© 2026 {DEVELOPER}",
         "privacy": {
             "title": "Gizlilik Politikası",
-            "intro": f"Bu politika, Echo Trail uygulamasının (“uygulama”) hangi bilgileri işlediğini açıklar. Echo Trail'in geliştiricisi {DEVELOPER}'dır (“ben”). Yürürlük tarihi: {{date}}.",
+            "intro": f"Bu politika, Echo Trail: Ses Labirenti uygulamasının (“uygulama”, “Echo Trail”) hangi bilgileri işlediğini açıklar. Echo Trail'in geliştiricisi {DEVELOPER}'dır (“ben”). Yürürlük tarihi: {{date}}.",
             "sections": [
                 ("Kısaca", [
                     "Uygulamada hesap yoktur ve verilerini alan bir sunucu işletmiyorum.",
@@ -198,7 +198,7 @@ CONTENT = {
                 ("Kulaklık şart mı?", "Kuvvetle önerilir: oyun yönü sol ve sağ kulağın üzerinden anlatır. Kulaklıksız oynarken sesin geldiği yönden yumuşak dalga halkaları görünür. İki davranışı da Ayarlar › Ses çıkışı bölümünden elle seçebilirsin."),
                 ("Sesin önümde mi arkamda mı olduğunu nasıl anlarım?", "Arkandaki ses daha boğuk ve daha pes gelir. Ayrıca hedefin vuruşları yaklaştıkça sıklaşır; birkaç adım yürü: ritim hızlanıyorsa doğru yöndesin."),
                 ("Kontrolü nasıl değiştiririm?", "Üç kontrol şekli var: parmağı takip, joystick ve telefonu eğerek. Ayarlar › Kontrol bölümünden, her bölümden önce çıkan karttan ya da bölüm sırasında sol alttaki düğmeden değiştirebilirsin."),
-                ("Eğerek kontrolde eğmediğim halde hareket ediyorum.", "Eğerek kontrolde dinlenme konumu “düz”dür: telefonu tepsi gibi yatay tut. Ne kadar eğersen o kadar hızlı yürürsün."),
+                ("Eğerek kontrolde eğmediğim halde hareket ediyorum.", "Eğerek kontrolde dinlenme konumu, telefonun üst kenarı hafifçe sana doğru kalkık halidir; ekrana bakarken doğal tutuşun gibi. Oradan eğerek yürürsün; ne kadar eğersen o kadar hızlı."),
                 ("İpucu ne işe yarar?", "İpucu, sese giden yolu gösteren bir ışık yakar ve engelleri kısa bir an görünür kılar. Bölüm başına bir ücretsiz ipucun vardır; daha fazlası ödüllü video izleyerek alınır."),
                 ("“Reklamları kaldır”ı aldım ama hâlâ reklam görüyorum.", "Satın alım, bölüm aralarında çıkan reklamları kaldırır. Ödüllü videolar, izlemeyi sen seçtiğin için durmaya devam eder. Bölüm aralarında hâlâ reklam çıkıyorsa Ayarlar › Satın alımlar bölümünden “Satın alımları geri yükle”ye dokun."),
                 ("Satın alımımı yeni cihazda nasıl geri yüklerim?", "Aynı Apple Kimliği ile giriş yap, oyunda Ayarlar › Satın alımlar bölümünü aç ve “Satın alımları geri yükle”ye dokun."),
@@ -228,6 +228,11 @@ def linkify(text):
         else:
             out.append(escape(word))
     return " ".join(out)
+
+
+def store_name(c):
+    """The app's App Store name in the page's language."""
+    return "Echo Trail: Ses Labirenti" if c["lang"] == "tr" else "Echo Trail: Sound Maze"
 
 
 def page(c, kind, body, title, description):
@@ -310,7 +315,7 @@ def index(c):
   <ul class="plain">{more}</ul>
 </section>
 </main>"""
-    return page(c, "index", body, f"Echo Trail · {c['tagline']}", c["lead"])
+    return page(c, "index", body, f"{store_name(c)} · {c['tagline']}", c["lead"])
 
 
 def privacy(c):
@@ -323,7 +328,7 @@ def privacy(c):
         else:
             parts.append(f"<p>{linkify(items[0])}</p>")
     body = f"<main class=\"doc\">{''.join(parts)}</main>"
-    return page(c, "privacy", body, f"{p['title']} · Echo Trail", p["sections"][0][1][0])
+    return page(c, "privacy", body, f"{p['title']} · {store_name(c)}", p["sections"][0][1][0])
 
 
 def support(c):
@@ -336,7 +341,7 @@ def support(c):
 <h2>{escape(s['contact_title'])}</h2>
 <p>{linkify(s['contact'])}</p>
 </main>"""
-    return page(c, "support", body, f"{s['title']} · Echo Trail", s["intro"])
+    return page(c, "support", body, f"{s['title']} · {store_name(c)}", s["intro"])
 
 
 if __name__ == "__main__":

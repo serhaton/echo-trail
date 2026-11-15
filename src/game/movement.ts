@@ -34,9 +34,9 @@ export interface MovementTuning {
   joystickDeadzone: number;
   /** Follow-finger: start slowing down within this distance (world units). */
   arriveRadius: number;
-  /** Tilt: lean away from flat (in g; 0.3 ≈ 17°) that means full speed. */
+  /** Tilt: lean away from the resting pose (in g; 0.3 ≈ 17°) that means full speed. */
   tiltRange: number;
-  /** Tilt: ignore leans smaller than this (in g; 0.06 ≈ 3.5°), so "flat" is easy to hold. */
+  /** Tilt: ignore leans smaller than this (in g; 0.06 ≈ 3.5°), so the resting pose is easy to hold. */
   tiltDeadzone: number;
 }
 
@@ -58,7 +58,7 @@ export function desiredVelocity(
   player: Vec2,
   camera: Camera,
   tuning: MovementTuning,
-  /** Current lean away from flat (tilt scheme only). */
+  /** Current lean away from the resting pose (tilt scheme only). */
   lean: Vec2 = { x: 0, y: 0 },
 ): Vec2 {
   if (scheme === 'tilt') {

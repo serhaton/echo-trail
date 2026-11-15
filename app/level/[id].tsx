@@ -31,13 +31,16 @@ import { ControlDemo } from '@/components/ControlDemo';
 import { CollectBurst } from '@/components/CollectBurst';
 import { ColorTrail } from '@/components/ColorTrail';
 import { DebugOverlay } from '@/components/DebugOverlay';
+import { FoundStar } from '@/components/FoundStar';
 import { HintButton } from '@/components/HintButton';
 import { HintGlow } from '@/components/HintGlow';
 import { MenuButton } from '@/components/MenuButton';
 import { Segmented } from '@/components/Segmented';
+import { LitGround } from '@/components/LitGround';
 import { ObstacleOverlay } from '@/components/ObstacleOverlay';
 import { PlayerDot } from '@/components/PlayerDot';
 import { RevealImage } from '@/components/RevealImage';
+import { SoundNotes } from '@/components/SoundNotes';
 import { Stars } from '@/components/Stars';
 import { StoryCaption } from '@/components/StoryCaption';
 import { TimerLine } from '@/components/TimerLine';
@@ -874,6 +877,9 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
   };
   const timerRight = width - insets.right - spacing.md;
 
+  // Hidden sounds still waiting: drawn as lights where the ground is lit.
+  const uncollectedLights = collectibles.filter((c) => !collected.includes(c.id)).map((c) => c.position);
+
   return (
     <View style={styles.root}>
       <GestureDetector gesture={pan}>
@@ -887,6 +893,16 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
                 { scale: camera.scale },
               ]}
             >
+              {/* Where the light has been, the picture and the obstacles stay lit. */}
+              <LitGround
+                trail={trail}
+                source={level.revealImage}
+                world={WORLD}
+                obstacles={obstacles}
+                obstacleColor={palette.playerGlow}
+                lights={uncollectedLights}
+                lightColor={palette.hint}
+              />
               {showReveal && (
                 <RevealImage
                   source={level.revealImage}
@@ -934,6 +950,9 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
                   color={palette.waves}
                 />
               )}
+              {phase === 'playing' && uncollectedLights.length > 0 && (
+                <SoundNotes positions={uncollectedLights} color={palette.hint} />
+              )}
               <CollectBurst at={burstAt} progress={burstProgress} color={palette.hint} />
               {!showReveal && (
                 <HintGlow
@@ -950,6 +969,10 @@ function LevelPlayer({ level, mode, difficulty, demo, demoCues = false }: LevelP
                 energy={energy}
                 flash={flash}
               />
+              {/* On top of the dot: the player ends the level standing on the target. */}
+              {showReveal && (
+                <FoundStar at={level.target.position} progress={reveal} color={palette.hint} />
+              )}
             </Group>
 
             {/* Screen space */}

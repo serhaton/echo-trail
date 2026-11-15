@@ -1,4 +1,4 @@
-# Echo Trail
+# Echo Trail: Sound Maze
 
 Karanlık bir ekranda yolunu sesle bulduğun, iOS için bir mobil oyun.
 React Native + Expo (SDK 58), TypeScript, expo-router, development build.

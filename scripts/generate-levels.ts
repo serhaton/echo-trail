@@ -471,7 +471,7 @@ for (const mode of ['zen', 'mystery', 'tension', 'cheerful'] as const) {
       ...(mode === 'tension'
         ? [
             '  // It appears where you began, a few seconds after you set off.',
-            `  chaser: { start: { x: ${found.start.x}, y: ${found.start.y} }, delaySeconds: ${n <= 3 ? 6 : 5} },`,
+            `  chaser: { start: { x: ${found.start.x}, y: ${found.start.y} }, delaySeconds: ${n <= 3 ? 10 : 8} },`,
           ]
         : []),
       `  ambience: '${ambience}',`,

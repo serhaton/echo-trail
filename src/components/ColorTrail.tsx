@@ -39,6 +39,19 @@ function chunkPath(chunk: TrailChunk): SkPath | null {
   return pathCache.get(chunk) ?? null;
 }
 
+/** One Skia path per trail chunk (finished chunks cached, the live head rebuilt). */
+export function trailPaths(trail: Trail): { key: number; path: SkPath; startDistance: number }[] {
+  const out: { key: number; path: SkPath; startDistance: number }[] = [];
+  for (const chunk of trail.finishedChunks) {
+    const path = chunkPath(chunk);
+    if (path) out.push({ key: chunk.id, path, startDistance: chunk.startDistance });
+  }
+  const live = trail.liveChunk;
+  const livePath = buildPath(live.points);
+  if (livePath) out.push({ key: live.id, path: livePath, startDistance: live.startDistance });
+  return out;
+}
+
 interface ColorTrailProps {
   trail: Trail;
   /** Mode palette the trail cycles through. */
@@ -65,26 +78,11 @@ export function ColorTrail({
 }: ColorTrailProps) {
   useSyncExternalStore(trail.subscribe, trail.getVersion);
 
-  const items: { key: number; path: SkPath; color: string }[] = [];
-  for (const chunk of trail.finishedChunks) {
-    const path = chunkPath(chunk);
-    if (path) {
-      items.push({
-        key: chunk.id,
-        path,
-        color: cyclePalette(palette, chunk.startDistance / colorStep),
-      });
-    }
-  }
-  const live = trail.liveChunk;
-  const livePath = buildPath(live.points);
-  if (livePath) {
-    items.push({
-      key: live.id,
-      path: livePath,
-      color: cyclePalette(palette, live.startDistance / colorStep),
-    });
-  }
+  const items = trailPaths(trail).map((it) => ({
+    key: it.key,
+    path: it.path,
+    color: cyclePalette(palette, it.startDistance / colorStep),
+  }));
 
   return (
     <Group opacity={opacity}>

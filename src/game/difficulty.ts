@@ -15,7 +15,10 @@ export const DIFFICULTIES: readonly Difficulty[] = ['easy', 'normal', 'hard'];
 const rank: Record<Difficulty, number> = { easy: 0, normal: 1, hard: 2 };
 
 export interface DifficultyRules {
-  /** Multiplies the level's base (Normal) time. */
+  /**
+   * Multiplies the level's base time. Below 1 even on Normal: the walked
+   * path now stays lit (picture and obstacles), which makes levels easier.
+   */
   timeMultiplier: number;
   /** Seconds before another hint can be used. */
   hintCooldown: number;
@@ -26,9 +29,9 @@ export interface DifficultyRules {
 }
 
 export const difficultyRules: Record<Difficulty, DifficultyRules> = {
-  easy: { timeMultiplier: 1.4, hintCooldown: 8, hintDuration: 4.5, chaserSpeed: 38 },
-  normal: { timeMultiplier: 1.0, hintCooldown: 15, hintDuration: 3.5, chaserSpeed: 48 },
-  hard: { timeMultiplier: 0.75, hintCooldown: 25, hintDuration: 2.5, chaserSpeed: 58 },
+  easy: { timeMultiplier: 0.7, hintCooldown: 8, hintDuration: 4.5, chaserSpeed: 37 },
+  normal: { timeMultiplier: 0.5, hintCooldown: 15, hintDuration: 3.5, chaserSpeed: 46 },
+  hard: { timeMultiplier: 0.4, hintCooldown: 25, hintDuration: 2.5, chaserSpeed: 55 },
 };
 
 /** True if `current` is at least as hard as `required`. */

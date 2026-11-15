@@ -64,7 +64,7 @@ export const tension24: LevelDefinition = {
     },
   ],
   // It appears where you began, a few seconds after you set off.
-  chaser: { start: { x: 225, y: 825 }, delaySeconds: 5 },
+  chaser: { start: { x: 225, y: 825 }, delaySeconds: 8 },
   ambience: 'ambDread',
   baseTimeSeconds: 110,
   requiredStars: 49,

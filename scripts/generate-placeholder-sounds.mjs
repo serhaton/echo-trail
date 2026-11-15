@@ -375,18 +375,23 @@ function loop(seconds, seed, fill, fade = 0.8) {
 }
 
 /** Add filtered noise with a slowly wandering level. */
-function noiseBed(out, rand, { lpA = 0.05, lpB = 0.005, level = 0.5, wander = 0.0005 } = {}) {
+function noiseBed(out, rand, { lpA = 0.05, lpB = 0.005, level = 0.5, wander = 0.0005, steep = false } = {}) {
   let a = 0;
+  let a2 = 0;
   let b = 0;
   let m = 0.6;
   let mt = 0.6;
   for (let i = 0; i < out.length; i++) {
     const w = rand() * 2 - 1;
     a += lpA * (w - a);
+    // `steep`: a second low-pass stage, so the highs fall away twice as
+    // fast and no hiss is left above the cutoff.
+    a2 += lpA * (a - a2);
+    const low = steep ? a2 : a;
     b += lpB * (w - b);
     if (i % 4410 === 0) mt = 0.3 + rand() * 0.7;
     m += wander * (mt - m);
-    out[i] += (a - b) * m * level;
+    out[i] += (low - b) * m * level;
   }
 }
 
@@ -417,9 +422,11 @@ const ambForestDawn = () =>
     sprinkle(o, r, 26, tweet);
   });
 
+// v2 (playtest): the water bed was a bright band of noise and read as hiss.
+// Now a low, soft murmur (below ~500 Hz); the bubbling blips carry the "river".
 const ambRiver = () =>
   loop(8, 52, (o, r) => {
-    noiseBed(o, r, { lpA: 0.3, lpB: 0.05, level: 0.45, wander: 0.002 });
+    noiseBed(o, r, { lpA: 0.07, lpB: 0.008, level: 1.6, wander: 0.002, steep: true });
     sprinkle(o, r, 30, (rr) => {
       const n = Math.round(0.03 * SAMPLE_RATE);
       const p = new Float32Array(n);
@@ -431,10 +438,14 @@ const ambRiver = () =>
 
 const ambBeach = () =>
   loop(12, 53, (o, r) => {
+    // v2 (playtest): two low-pass stages (~250 Hz) — a distant, dark surf
+    // instead of a hissing wash.
+    let a0 = 0;
     let a = 0;
     for (let i = 0; i < o.length; i++) {
       const t = i / SAMPLE_RATE;
-      a += 0.04 * (r() * 2 - 1 - a);
+      a0 += 0.035 * (r() * 2 - 1 - a0);
+      a += 0.035 * (a0 - a);
       // Two wave swells per loop: rise, crash, wash back.
       const ph = (t % 6) / 6;
       const swell = ph < 0.6 ? (ph / 0.6) ** 2 : Math.exp(-(ph - 0.6) * 6);

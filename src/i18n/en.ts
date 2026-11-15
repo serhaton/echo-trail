@@ -82,7 +82,7 @@ export const en = {
     controlJoystickHelp: 'Touch anywhere and drag in the direction you want to walk.',
     controlTilt: 'Tilt',
     controlTiltHelp:
-      'Hold the phone flat, like a tray. Tilt it and you walk that way; the more you tilt, the faster. Flat means stop.',
+      'Hold the phone with its top edge raised slightly toward you: that is the resting position. Tilt it from there and you walk that way; the more you tilt, the faster.',
     sound: 'Sound',
     sfxVolume: 'Effects',
     ambientVolume: 'Ambience',

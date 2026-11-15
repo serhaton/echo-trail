@@ -1,6 +1,6 @@
 # App Store submission kit
 
-Everything needed to fill in App Store Connect for **Echo Trail**, in English
+Everything needed to fill in App Store Connect for **Echo Trail: Sound Maze**, in English
 and Turkish. Text marked **(decide)** needs a choice only you can make.
 
 Character limits are Apple's; `python3 scripts/check-store-text.py` verifies
@@ -21,7 +21,8 @@ that every field below fits.
 | Field | Value |
 |---|---|
 | Platform | iOS |
-| Name | Echo Trail |
+| Name | **Echo Trail: Sound Maze** (English). Turkish localization: **Echo Trail: Ses Labirenti**. |
+| Name on the home screen | Echo Trail (`name` in `app.json`; independent of the store name) |
 | Primary language | English (U.S.), plus a Turkish localization |
 | Bundle ID | `com.serhatonal.echotrail` |
 | SKU | `echotrail-ios` (any unique string; never shown to users) |
@@ -36,6 +37,13 @@ that every field below fits.
 | Export compliance | Uses no non-exempt encryption (already declared in the app: `ITSAppUsesNonExemptEncryption = false`) |
 | Advertising identifier | Yes, the app uses the IDFA to serve ads (through AdMob, behind the tracking prompt) |
 
+About the name: "Echo Trail" alone and "Follow the sound" were already taken
+on the App Store, so the store name carries a suffix. The game's own title
+screen, the icon label and the short form used in running text stay "Echo
+Trail". Store names must be unique in every language: the Turkish name is
+entered when the Turkish localization is added and has not been checked for
+availability yet (fallback: `Echo Trail: Sesin İzinde`).
+
 ## 2. Listing text
 
 ### English (U.S.)
@@ -43,7 +51,7 @@ that every field below fits.
 **Name** (30 max)
 
 ```
-Echo Trail
+Echo Trail: Sound Maze
 ```
 
 **Subtitle** (30 max)
@@ -63,12 +71,13 @@ A game you play with your ears. Follow a sound through the dark, feel your way p
 ```
 The screen is dark. Somewhere ahead, a sound is calling.
 
-Echo Trail is a game you play with your ears. Put on your headphones and follow the sound: it grows louder, clearer and faster as you get closer, and your left and right ear tell you which way to turn. You cannot see the walls, trees and water in your way, but you can hear and feel them. And as you walk, the path behind you lights up in colour. Reach the sound, and the picture of the place you just crossed opens in front of you.
+Echo Trail: Sound Maze is a game you play with your ears. Put on your headphones and follow the sound: it grows louder, clearer and faster as you get closer, and your left and right ear tell you which way to turn. You cannot see the walls, trees and water in your way, but you can hear and feel them. But wherever you walk, the dark gives way: the ground you crossed stays lit, showing a strip of the scene and the obstacles you slipped past. Reach the sound, and the whole picture of the place opens in front of you.
 
 LISTEN
 • True left/right sound: turn toward what you hear.
 • Closer means louder, clearer and faster. A sound behind you turns dull and low.
 • Bump into something and you hear a soft thud from its side and feel a tap.
+• Your path stays lit behind you in colour, so you can see where you have been and what stood in the way.
 
 FOUR JOURNEYS, 120 LEVELS
 • Zen: a day-long walk through nature, from a forest at dawn to a hill under the stars. No rush; when time runs out you simply keep walking.
@@ -80,7 +89,7 @@ MAKE IT YOURS
 • Three ways to move: follow your finger, a joystick, or tilt your device.
 • Three difficulty levels.
 • Hints that light the way when you are stuck.
-• Hidden sounds to find: extra time, album details and pieces of the story.
+• Hidden sounds to find, each flashing now and then as a small note: extra time, album details and pieces of the story.
 • An album that fills with the pictures you reveal, and joins them into one long landscape.
 
 NO HEADPHONES?
@@ -95,13 +104,13 @@ GOOD TO KNOW
 **Keywords** (100 max, comma-separated, no spaces after commas; do not repeat words from the name or subtitle)
 
 ```
-audio game,headphones,relaxing,zen,mystery,maze,dark,listen,puzzle,spatial,calm,explore,blind
+audio game,headphones,relaxing,zen,mystery,labyrinth,dark,listen,puzzle,spatial,calm,explore,blind
 ```
 
 **What's New** (4000 max)
 
 ```
-The first release of Echo Trail. Put on your headphones and find your way.
+The first release of Echo Trail: Sound Maze. Put on your headphones and find your way.
 ```
 
 ### Turkish
@@ -109,7 +118,7 @@ The first release of Echo Trail. Put on your headphones and find your way.
 **Name**
 
 ```
-Echo Trail
+Echo Trail: Ses Labirenti
 ```
 
 **Subtitle**
@@ -129,12 +138,13 @@ Kulaklarınla oynadığın bir oyun. Karanlıkta bir sesi takip et, göremedikle
 ```
 Ekran karanlık. İleride bir yerde bir ses seni çağırıyor.
 
-Echo Trail, kulaklarınla oynadığın bir oyun. Kulaklığını tak ve sesi takip et: yaklaştıkça yükselir, netleşir ve sıklaşır; sol ve sağ kulağın hangi yöne döneceğini söyler. Yolundaki duvarları, ağaçları ve suyu göremezsin ama duyabilir ve hissedebilirsin. Sen yürüdükçe arkanda kalan yol renklenir. Sese ulaştığında, az önce geçtiğin yerin resmi önünde açılır.
+Echo Trail: Ses Labirenti, kulaklarınla oynadığın bir oyun. Kulaklığını tak ve sesi takip et: yaklaştıkça yükselir, netleşir ve sıklaşır; sol ve sağ kulağın hangi yöne döneceğini söyler. Yolundaki duvarları, ağaçları ve suyu göremezsin ama duyabilir ve hissedebilirsin. Ama yürüdüğün her yerde karanlık aralanır: geçtiğin zemin aydınlık kalır, manzaradan bir şeridi ve yanından süzüldüğün engelleri gösterir. Sese ulaştığında, o yerin resminin tamamı önünde açılır.
 
 DİNLE
 • Gerçek sol/sağ ses: duyduğun yöne dön.
 • Yakın olan daha yüksek, daha net ve daha sıktır. Arkandaki ses boğuk ve pes gelir.
 • Bir şeye çarptığında onun olduğu taraftan tok bir ses duyar, hafif bir titreşim hissedersin.
+• Yolun arkanda renkli ve aydınlık kalır; nereden geçtiğini ve önüne neyin çıktığını görürsün.
 
 DÖRT YOLCULUK, 120 BÖLÜM
 • Zen: şafaktaki ormandan yıldızların altındaki tepeye, doğada gün boyu süren bir yürüyüş. Acele yok; süre bitse de yürümeye devam edersin.
@@ -146,7 +156,7 @@ KENDİNE GÖRE AYARLA
 • Üç kontrol şekli: parmağını takip et, joystick kullan ya da cihazını eğ.
 • Üç zorluk seviyesi.
 • Takıldığında yolu aydınlatan ipuçları.
-• Bulunacak gizli sesler: ekstra süre, albüm detayları ve hikâyeden parçalar.
+• Bulunacak gizli sesler, ara sıra küçük bir nota olarak parlar: ekstra süre, albüm detayları ve hikâyeden parçalar.
 • Açtığın resimlerle dolan ve onları tek bir uzun manzarada birleştiren bir albüm.
 
 KULAKLIĞIN YOK MU?
@@ -161,13 +171,13 @@ BİLMEN GEREKENLER
 **Keywords**
 
 ```
-sesli oyun,kulaklık,rahatlatıcı,zen,gizem,labirent,karanlık,dinle,bulmaca,sakin,keşif,ses oyunu
+sesli oyun,kulaklık,rahatlatıcı,zen,gizem,macera,karanlık,dinle,bulmaca,sakin,keşif,ses oyunu
 ```
 
 **What's New**
 
 ```
-Echo Trail'in ilk sürümü. Kulaklığını tak ve yolunu bul.
+Echo Trail: Ses Labirenti'nin ilk sürümü. Kulaklığını tak ve yolunu bul.
 ```
 
 ## 3. URLs
@@ -202,6 +212,31 @@ unframed captures they were made from.
 App Store Connect scales the larger sizes down for smaller devices, so these
 three sets cover every iPhone and iPad.
 
+The seven shots, in upload order (file names start with the number):
+
+| # | Headline (EN / TR) | Shows |
+|---|---|---|
+| 01 | Find your way by sound / Yolunu sesle bul | Walking: the lit path with the obstacles it passed |
+| 02 | Stuck? A hint lights the way / Takıldın mı? İpucu yolu aydınlatır | The hint light |
+| 03 | Reach the sound, reveal the place / Sese ulaş, mekânı ortaya çıkar | The revealed picture, the star on the target, the result card |
+| 04 | Four journeys, 120 levels / Dört yolculuk, 120 bölüm | The journey map |
+| 05 | No headphones? Follow the waves / Kulaklık yok mu? Dalgaları izle | Wave rings and the hidden sounds' notes |
+| 06 | Finger, joystick or tilt / Parmak, joystick ya da eğerek | The ready card with the control choice |
+| 07 | Collect every picture / Bütün resimleri topla | The album |
+
+The headlines do not contain the app name, so a name change does not touch
+them. The set was last captured on 15 November 2026, after the lit path, the
+notes and the target star were added. To retake it after a visual change:
+
+1. Build the screenshot-mode app (the command is at the top of
+   `scripts/take-screenshots.sh`).
+2. `scripts/take-screenshots.sh` captures both simulators in both languages.
+3. `python3 scripts/compose-screenshots.py` adds the headlines and makes
+   every size, plus the four small shots on the website.
+
+Look through the results before uploading: a capture taken before the app has
+finished opening shows only the splash screen.
+
 ### Header and Search Results (`store/creative/`)
 
 New in App Store Connect since October 2026, shown on iOS 27 and iPadOS 27 or
@@ -214,7 +249,16 @@ Search Results**.
 | `search-3840x2560.png` | 3840 × 2560 (3:2) | Search results |
 | `universal-5244x2950.png` | 5244 × 2950 (16:9, PNG) | One image for both placements (alternative to the two above; enables "Use header asset in search results") |
 
-The name and mark sit inside Apple's art safe area for each format. Apple's
+Each image shows the game's idea: everything is dark except where the light
+has walked, and along that trail the four journeys' pictures, the obstacles
+and the hidden sounds (notes) show through, with the sound being followed
+(the star and its rings) ahead. The title reads "ECHO TRAIL" with "SOUND
+MAZE" beneath it and the line "Find your way by sound", in English only;
+there is no Turkish version of these images. The title sits inside Apple's
+art safe area for each format; everything outside it is auxiliary art that
+may be cropped. The pictures in them are the current placeholder level
+pictures, so regenerate once the final art is in.
+Regenerate with `python3 scripts/generate-brand-assets.py`. Apple's
 rules for these images (Review Guideline 2.3.14): content must relate to the
 app, suit all audiences, and contain no prices or unverifiable claims.
 
@@ -318,9 +362,9 @@ requests non-personalised ads if the player declines.
 **Notes for the reviewer:**
 
 ```
-Echo Trail is an audio game: the screen is intentionally almost black during play. Please use headphones and turn the volume up.
+Echo Trail: Sound Maze is an audio game: the screen is intentionally almost black during play. Please use headphones and turn the volume up.
 
-How to play: start a level from Play > a journey > level 1. A card shows the control scheme; press Start. Hold a finger on the screen and the glowing dot walks toward it. Follow the repeating sound: it is louder and faster as you get closer, and panned left or right. Reaching it ends the level and reveals a picture.
+How to play: start a level from Play > a journey > level 1. A card shows the control scheme; press Start. Hold a finger on the screen and the glowing dot walks toward it. Follow the repeating sound: it is louder and faster as you get closer, and panned left or right. Where the dot has walked, the ground stays lit and shows the scene and the obstacles nearby. Reaching the sound ends the level and reveals the whole picture.
 
 If you get stuck, press Hint (bottom right): a light shows the way and the invisible obstacles appear briefly. Without headphones, the game shows wave rings coming from the direction of the sound.
 
@@ -336,6 +380,8 @@ The Tension journey has a chaser that follows the player and is labelled "Not fa
 Things that are still placeholders or development values. The app will run
 without them, but they should be settled before a public release.
 
+- [ ] **Turkish store name.** Add the Turkish localization in App Store
+      Connect and confirm `Echo Trail: Ses Labirenti` is free (section 1).
 - [ ] **AdMob app ID.** `app.json` › `react-native-google-mobile-ads` ›
       `iosAppId` is Google's public *sample* ID. Replace it with your own.
 - [ ] **AdMob ad units.** Fill `AD_UNIT_IDS` in `src/config/monetization.ts`
@@ -362,6 +408,8 @@ without them, but they should be settled before a public release.
       play through them on a device and adjust the generator where needed.
 - [ ] **Release build on a real device.** Test with
       `npx expo run:ios --configuration Release --device`: controls (tilt
-      especially), ads, the purchase with a sandbox account, restore.
+      especially: its resting pose is the phone held with the top edge
+      raised about 25°), the shortened countdowns on all three difficulties,
+      ads, the purchase with a sandbox account, restore.
 - [ ] **Privacy answers** checked against Google's current disclosure
       (section 7).

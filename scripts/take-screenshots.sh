@@ -25,7 +25,7 @@ DEVICES=("iphone|iPhone 17 Pro Max" "ipad|iPad Pro 13-inch (M5)")
 
 # n-name | route | seconds to wait before the capture
 SHOTS=(
-  "2-journey|/journey/zen|5"
+  "2-journey|/journey/zen|10"  # first launch after install: give the app time to open
   "3-walk|/level/zen-05?demo=walk&difficulty=easy|9"
   "4-hint|/level/mystery-04?demo=hint&difficulty=easy|7.2"
   "5-rings|/level/cheerful-04?demo=walk&cues=1&difficulty=easy|7"
