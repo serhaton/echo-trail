@@ -443,10 +443,14 @@ without them, but they should be settled before a public release.
       | Interstitial ad unit | `ca-app-pub-4475107857161348/5197423028` | `AD_UNIT_IDS.interstitial` in `src/config/monetization.ts` |
       | Rewarded ad unit | `ca-app-pub-4475107857161348/7161066372` | `AD_UNIT_IDS.rewarded` in `src/config/monetization.ts` |
 
-- [ ] **app-ads.txt.** AdMob asks for an `app-ads.txt` file at the root of the
-      developer website listed in the store. A project site
-      (`serhaton.github.io/echo-trail/`) cannot serve the domain root; you need
-      either a `serhaton.github.io` repository or a custom domain for it.
+- [x] **app-ads.txt.** Published at `https://serhaton.github.io/app-ads.txt`
+      (from the `serhaton.github.io` repository) with the line
+      `google.com, pub-4475107857161348, DIRECT, f08c47fec0942fa0`; checked on
+      16 November 2026. AdMob builds the address from the host name of the
+      store listing's Marketing URL (`https://serhaton.github.io/echo-trail/`),
+      so this is where it looks. Still to do in AdMob: link the app to its
+      App Store listing (id 6835037269), then Apps › View all apps ›
+      app-ads.txt › "Check for updates"; allow up to 24 hours.
 - [ ] **SKAdNetwork IDs.** `app.json` lists only Google's own ID. Google
       publishes a longer list for its ad partners; add it for better ad fill.
 - [ ] **In-app purchase.** The product `com.serhatonal.echotrail.removeads`
