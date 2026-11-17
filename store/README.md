@@ -33,7 +33,7 @@ that every field below fits.
 | Price | Free **(decide)** |
 | Availability | All countries or regions **(decide)** |
 | Copyright | `© 2026 Serhat Onal` |
-| Version | 1.0.0, build 4 (`version` and `ios.buildNumber` in `app.json`) |
+| Version | 1.0.1, build 5 (`version` and `ios.buildNumber` in `app.json`) |
 | Export compliance | Uses no non-exempt encryption (already declared in the app: `ITSAppUsesNonExemptEncryption = false`) |
 | Advertising identifier | Yes, the app uses the IDFA to serve ads (through AdMob, behind the tracking prompt) |
 
@@ -182,13 +182,13 @@ Echo Trail: Ses Labirenti'nin ilk sürümü. Kulaklığını tak ve yolunu bul.
 
 ## 3. URLs
 
-The website lives in `docs/` and is served by GitHub Pages.
+The website lives in `docs/` and is served by GitHub Pages under the custom domain `serhaton.com`.
 
 | Field | English | Turkish |
 |---|---|---|
-| Marketing URL | https://serhaton.github.io/echo-trail/ | https://serhaton.github.io/echo-trail/tr/ |
-| Support URL | https://serhaton.github.io/echo-trail/support.html | https://serhaton.github.io/echo-trail/tr/support.html |
-| Privacy Policy URL | https://serhaton.github.io/echo-trail/privacy.html | https://serhaton.github.io/echo-trail/tr/privacy.html |
+| Marketing URL | https://serhaton.com/echo-trail/ | https://serhaton.com/echo-trail/tr/ |
+| Support URL | https://serhaton.com/echo-trail/support.html | https://serhaton.com/echo-trail/tr/support.html |
+| Privacy Policy URL | https://serhaton.com/echo-trail/privacy.html | https://serhaton.com/echo-trail/tr/privacy.html |
 
 The pages give `serhaton@gmail.com` as the contact address (set as `EMAIL` in
 `scripts/build-site.py`).
@@ -443,11 +443,11 @@ without them, but they should be settled before a public release.
       | Interstitial ad unit | `ca-app-pub-4475107857161348/5197423028` | `AD_UNIT_IDS.interstitial` in `src/config/monetization.ts` |
       | Rewarded ad unit | `ca-app-pub-4475107857161348/7161066372` | `AD_UNIT_IDS.rewarded` in `src/config/monetization.ts` |
 
-- [x] **app-ads.txt.** Published at `https://serhaton.github.io/app-ads.txt`
+- [x] **app-ads.txt.** Published at `https://serhaton.com/app-ads.txt`
       (from the `serhaton.github.io` repository) with the line
       `google.com, pub-4475107857161348, DIRECT, f08c47fec0942fa0`; checked on
-      16 November 2026. AdMob builds the address from the host name of the
-      store listing's Marketing URL (`https://serhaton.github.io/echo-trail/`),
+      17 November 2026. AdMob builds the address from the host name of the
+      store listing's Marketing URL (`https://serhaton.com/echo-trail/`),
       so this is where it looks. Still to do in AdMob: link the app to its
       App Store listing (id 6835037269), then Apps › View all apps ›
       app-ads.txt › "Check for updates"; allow up to 24 hours.
@@ -458,7 +458,7 @@ without them, but they should be settled before a public release.
       it to "Ready to Submit" (price, both localizations, image, review
       screenshot and notes; section 5) and add it to the first version under
       "In-App Purchases and Subscriptions" before submitting for review.
-- [x] **Version.** `app.json` says 1.0.0, build 4 (build 1 was refused at upload: missing microphone purpose string, ITMS-90683; build 2 could show no ads when the first ad load failed or the store was slow). For every further upload
+- [x] **Version.** `app.json` says 1.0.1, build 5 (1.0.0 shipped as build 4; build 1 was refused at upload: missing microphone purpose string, ITMS-90683; build 2 could show no ads when the first ad load failed or the store was slow). For every further upload
       raise `ios.buildNumber`, then `npm run prebuild`.
 - [ ] **Sounds.** Every sound is a synthesized placeholder
       (`assets/sounds/README.md` lists what each one should become). They are

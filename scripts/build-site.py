@@ -17,7 +17,7 @@ from html import escape
 from pathlib import Path
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
-SITE = "https://serhaton.github.io/echo-trail"
+SITE = "https://serhaton.com/echo-trail"
 EMAIL = "serhaton@gmail.com"
 DEVELOPER = "Serhat Onal"
 EFFECTIVE = {"en": "14 November 2026", "tr": "14 Kasım 2026"}

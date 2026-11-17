@@ -84,7 +84,7 @@ içindeki `FIRST`).
 - `store/screenshots/`: mağaza ekran görüntüleri (iPhone 6.9", 6.1", iPad 13";
   İngilizce ve Türkçe). `store/creative/`: Header ve Search Results görselleri.
 - `docs/`: GitHub Pages sitesi (tanıtım, gizlilik, destek):
-  https://serhaton.github.io/echo-trail/
+  https://serhaton.com/echo-trail/
 
 ```bash
 python3 scripts/generate-brand-assets.py   # ikon, açılış ekranı, mağaza görselleri
